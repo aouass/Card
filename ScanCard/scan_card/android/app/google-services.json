@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "27801613333",
+    "project_id": "scancard-53ff8",
+    "storage_bucket": "scancard-53ff8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27801613333:android:cac4499833dca73140ca1c",
+        "android_client_info": {
+          "package_name": "com.example.scan_card"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpiMHyI9IZXhdcDMiHkNCSOCOwzLJ2PtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

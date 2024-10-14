@@ -58,56 +58,58 @@ class _ProfileUserState extends State<ProfileUser> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 40, right: 40, top: 80),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Profile',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40, right: 40, top: 80),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('image/Ellipse.png'),
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                'Informations Personnelles',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 10),
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('image/Ellipse.png'),
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              _buildTextField('Prenom', _firstNameController, Icons.person),
-              const SizedBox(height: 10),
-              _buildTextField('Nom', _lastNameController, Icons.person),
-              const SizedBox(height: 10),
-              _buildTextField('Email', _emailController, Icons.email),
-              const SizedBox(height: 20),
-              Padding(
-                padding: EdgeInsets.only(left: 50, right: 50),
-                child: ElevatedButton(
-                  onPressed: _updateProfile,
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF183E62),
-                      maximumSize: Size(200, 50)),
-                  child: const Text('Modifier Profile',
-                      style: TextStyle(fontSize: 18, color: Colors.white)),
+                const SizedBox(height: 15),
+                const Text(
+                  'Informations Personnelles',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                _buildTextField('Prenom', _firstNameController, Icons.person),
+                const SizedBox(height: 10),
+                _buildTextField('Nom', _lastNameController, Icons.person),
+                const SizedBox(height: 10),
+                _buildTextField('Email', _emailController, Icons.email),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  child: ElevatedButton(
+                    onPressed: _updateProfile,
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF183E62),
+                        maximumSize: Size(200, 50)),
+                    child: const Text('Modifier Profile',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

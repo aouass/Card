@@ -1,10 +1,18 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:scan_card/User/Scan.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:scan_card/User/CarteScannee.dart';
+import 'package:scan_card/User/ContactUser.dart';
 
 class AcceuilUser extends StatelessWidget {
+  Uint8List? _imageBytes;
   Future<Map<String, dynamic>> _getUserData() async {
+    File? _imageFile;
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return {};
@@ -16,6 +24,28 @@ class AcceuilUser extends StatelessWidget {
         .get();
 
     return userDoc.data() as Map<String, dynamic>;
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  Future<File?> pickImage() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedImage != null) {
+      _imageBytes = await pickedImage.readAsBytes();
+
+      _applyOCR(_imageBytes);
+
+      return File(pickedImage.path);
+    }
+    return null;
+  }
+
+  Future<void> _applyOCR(dynamic image) async {
+    final inputImage = InputImage.fromFile(image);
+    final textRecognizer = TextRecognizer();
+    final RecognizedText recognizedText =
+        await textRecognizer.processImage(inputImage);
+
+    textRecognizer.close();
   }
 
   @override
@@ -49,7 +79,7 @@ class AcceuilUser extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 90, right: 90),
@@ -146,7 +176,7 @@ class AcceuilUser extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CameraPage()),
+                                                    CarteScannee()),
                                           );
                                         },
                                         icon: Icon(Icons.document_scanner),
@@ -203,7 +233,8 @@ class AcceuilUser extends StatelessWidget {
                                         children: [
                                           IconButton(
                                             onPressed: () {},
-                                            icon: Icon(Icons.groups_rounded),
+                                            icon: Icon(Icons
+                                                .domain_verification_rounded),
                                             color: Color(0xFFF9754E),
                                             iconSize: 30,
                                           ),
@@ -211,7 +242,7 @@ class AcceuilUser extends StatelessWidget {
                                             height: 20,
                                           ),
                                           const Text(
-                                            "Groupe",
+                                            "Domaine",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               color: Colors.black,
@@ -302,7 +333,14 @@ class AcceuilUser extends StatelessWidget {
                                           Padding(
                                             padding: EdgeInsets.only(right: 80),
                                             child: IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ContactUser()),
+                                                );
+                                              },
                                               icon: Icon(
                                                   Icons.contact_page_outlined),
                                               color: Color(0xFFF9754E),

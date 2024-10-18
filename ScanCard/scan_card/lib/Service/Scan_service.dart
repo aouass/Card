@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,14 +42,17 @@ class ScanService {
     }
   }
 
-  Future<void> addOrUpdateContact(
+  Future<void> addOrUpdateScan(
       String scanId, Map<String, dynamic> scanData) async {
     try {
       // Ajoute ou met à jour un document avec l'ID donné
-      await _firestore.collection('CarteScannee').doc(scanId).set(scanData);
+      await _firestore
+          .collection('CarteScannee')
+          .doc(scanId)
+          .set(scanData, SetOptions(merge: true));
     } catch (e) {
       throw Exception(
-          "Erreur lors de l'ajout ou de la mise à jour du contact : $e");
+          "Erreur lors de l'ajout ou de la mise à jour de la carte scannee : $e");
     }
   }
 }

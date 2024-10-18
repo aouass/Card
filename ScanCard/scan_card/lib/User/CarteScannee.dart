@@ -38,6 +38,19 @@ class _CarteScanneeState extends State<CarteScannee> {
     'Autres'
   ];
 
+  String? _selectedDomaine;
+  final List<String> _domaines = [
+    'Technologie',
+    'Santé',
+    'Marketing',
+    'Immobilier',
+    'Education',
+    'Tourisme',
+    'Energie',
+    'Environnement',
+    'Autres'
+  ];
+
   // Liste des champs dynamiques
   List<Widget> _additionalFields = [];
 
@@ -73,15 +86,15 @@ class _CarteScanneeState extends State<CarteScannee> {
 
     // Appel au service pour sauvegarder ou mettre à jour les données
     try {
-      await _scanService.addOrUpdateContact(ScanId, scanData);
+      await _scanService.addOrUpdateScan(ScanId, scanData);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Contact enregistré avec succès'),
+        content: Text('CarteScnanne enregistré avec succès'),
       ));
       // Réinitialiser les champs après l'enregistrement
       _resetFields();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Erreur lors de l\'enregistrement du contact'),
+        content: Text('Erreur lors de l\'enregistrement de la carte'),
       ));
     }
   }
@@ -99,6 +112,8 @@ class _CarteScanneeState extends State<CarteScannee> {
     setState(() {
       _selectedCategorie = null; // Réinitialiser la catégorie sélectionnée
       _additionalFields.clear(); // Réinitialiser les champs supplémentaires
+      _selectedDomaine = null;
+      _additionalFields.clear();
     });
   }
 
@@ -269,22 +284,22 @@ class _CarteScanneeState extends State<CarteScannee> {
                     _buildTextField(
                         _prenomController, 'Prenom...', Icons.person),
                     const SizedBox(height: 14),
-                    _buildTextField(
-                        _personnelController, 'Personnel...', Icons.badge),
+                    _buildTextField(_personnelController, 'Personnel...',
+                        Icons.phone_android_rounded),
                     const SizedBox(height: 14),
                     _buildTextField(
                         _professionController, 'Profession...', Icons.work),
                     const SizedBox(height: 14),
-                    _buildTextField(_emailController, 'Email...', Icons.email),
-                    const SizedBox(height: 14),
                     _buildTextField(
-                        _entrepriseController, 'Entreprise...', Icons.business),
+                        _emailController, 'Email...', Icons.alternate_email),
                     const SizedBox(height: 14),
-                    _buildTextField(
-                        _adresseController, 'Adresse...', Icons.location_city),
+                    _buildTextField(_entrepriseController, 'Entreprise...',
+                        Icons.business_rounded),
                     const SizedBox(height: 14),
-                    _buildTextField(
-                        _domaineController, 'Domaine...', Icons.domain),
+                    _buildTextField(_adresseController, 'Adresse...',
+                        Icons.location_on_outlined),
+                    const SizedBox(height: 14),
+                    _buildDomaineDropdown(),
                     const SizedBox(height: 14),
                     _buildTextField(_noteController, 'Note...', Icons.note),
                     const SizedBox(height: 10),
@@ -419,6 +434,48 @@ class _CarteScanneeState extends State<CarteScannee> {
           },
         ),
       ],
+    );
+  }
+
+  // Widget pour le champ Domaine (dropdown)
+  Widget _buildDomaineDropdown() {
+    return SizedBox(
+      width: 300,
+      height: 40,
+      child: DropdownButtonFormField<String>(
+        value: _selectedDomaine,
+        hint: Text('Domaine...'),
+        decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+            prefixIcon: Icon(Icons.domain_verification,
+                color: Color(0xFF21396A), size: 20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(color: Color(0xFF2C2C2C)),
+            ),
+            filled: true,
+            fillColor: Colors.white),
+        items: _domaines.map((String domaine) {
+          return DropdownMenuItem<String>(
+            value: domaine,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  domaine,
+                  style: TextStyle(fontSize: 18), // ajuster la taille du texte
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            _selectedDomaine = newValue;
+          });
+        },
+      ),
     );
   }
 }

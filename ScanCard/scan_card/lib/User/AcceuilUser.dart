@@ -3,14 +3,27 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scan_card/User/CarteScannee.dart';
+import 'package:scan_card/User/CategorieUser.dart';
 import 'package:scan_card/User/ContactUser.dart';
+import 'package:scan_card/User/Domaine.dart';
 
-class AcceuilUser extends StatelessWidget {
+
+class AcceuilUser extends StatefulWidget {
+  @override
+  _AcceuilUserState createState() => _AcceuilUserState();
+}
+
+
+class _AcceuilUserState extends State<AcceuilUser> {
   Uint8List? _imageBytes;
+  File? _imageFile;
+  String? _imageUrl; // Stocker l'URL de l'image
+
   Future<Map<String, dynamic>> _getUserData() async {
     File? _imageFile;
     User? user = FirebaseAuth.instance.currentUser;
@@ -48,6 +61,48 @@ class AcceuilUser extends StatelessWidget {
     textRecognizer.close();
   }
 
+
+Future<void> pickImageFromGallery() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _imageFile = File(pickedImage.path);
+      });
+
+      // Upload de l'image vers Firebase Storage
+      await _uploadImageToFirebase();
+    }
+  }
+
+
+  Future<void> _uploadImageToFirebase() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null && _imageFile != null) {
+      String filePath = 'profile_images/${user.uid}.jpg';
+
+      try {
+        // Téléchargement de l'image dans Firebase Storage
+        TaskSnapshot snapshot = await FirebaseStorage.instance
+            .ref(filePath)
+            .putFile(_imageFile!);
+
+        // Récupérer l'URL de l'image
+        String downloadUrl = await snapshot.ref.getDownloadURL();
+
+        // Mettre à jour l'URL de l'image dans Firestore
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'profileImageUrl': downloadUrl,
+        });
+
+        setState(() {
+          _imageUrl = downloadUrl;
+        });
+      } catch (e) {
+        print('Erreur lors de l\'upload de l\'image : $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +125,8 @@ class AcceuilUser extends StatelessWidget {
               String role = userData['role'] ?? 'Rôle inconnu';
               String nom = userData['nom'] ?? 'Nom inconnu';
               String prenom = userData['prenom'] ?? 'Prenom inconnu';
+              // Assurez-vous que 'profileImageUrl' est bien récupéré depuis les données
+              String? profileImageUrl = userData['profileImageUrl'];
 
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 1),
@@ -79,23 +136,29 @@ class AcceuilUser extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 90, right: 90),
+                      padding: EdgeInsets.only(left: 85, right: 80, top: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const CircleAvatar(
-                                radius: 35,
-                                backgroundImage:
-                                    AssetImage('image/Ellipse.png'),
+                              GestureDetector(
+                                onTap:pickImageFromGallery,
+                                child: CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: _imageUrl != null
+                                  ? NetworkImage(_imageUrl!)
+                                  : (profileImageUrl != null && profileImageUrl.isNotEmpty
+                                      ? NetworkImage(profileImageUrl)
+                                      : AssetImage('image/Ellipse.png')) as ImageProvider,
+                                ),
                               ),
                               Padding(
-                                padding: EdgeInsets.all(16),
+                                padding: EdgeInsets.only(left: 8, right: 8),
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -105,7 +168,7 @@ class AcceuilUser extends StatelessWidget {
                                       "Salut ,$prenom $nom ", //$nom  $prenom
                                       style: const TextStyle(
                                         color: Color(0xFFFFFFFF),
-                                        fontSize: 18,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ],
@@ -115,6 +178,10 @@ class AcceuilUser extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
+
+                    SizedBox(
+                      height: 10,
                     ),
 
                     //bloc du milieu
@@ -232,7 +299,14 @@ class AcceuilUser extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                               Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Domaine()),
+                                          );
+                                            },
                                             icon: Icon(Icons
                                                 .domain_verification_rounded),
                                             color: Color(0xFFF9754E),
@@ -282,7 +356,14 @@ class AcceuilUser extends StatelessWidget {
                                       Padding(
                                         padding: EdgeInsets.only(right: 80),
                                         child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                             Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategorieUser()),
+                                          );
+                                          },
                                           icon: Icon(Icons.category_outlined),
                                           color: Color(0xFFF9754E),
                                           iconSize: 40,

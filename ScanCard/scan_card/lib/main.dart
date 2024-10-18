@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/User/SplashScreen1.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'generated/l10n.dart';  // Chemin vers le fichier généré
+// import 'package:easy_localization/easy_localization.dart';
 
 import 'firebase_options.dart';
 
@@ -11,7 +14,10 @@ void main() async {
     options: DefaultFirebaseOptions
         .currentPlatform, // Assure-toi que firebase_options.dart est bien configuré
   );
-  runApp(const MyApp());
+  runApp(
+
+
+    const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +26,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+      // Définir les délégués pour les localisations
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // Définir les langues supportées
+      supportedLocales: [
+        const Locale('en', 'US'), // anglais
+        const Locale('fr', 'FR'), // français
+        // Ajoute d'autres langues ici
+      ],
+
+      locale: Locale('fr'), // Langue par défaut
       debugShowCheckedModeBanner: false,
       home: SplashPage(),
     );

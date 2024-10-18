@@ -1,6 +1,146 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:scan_card/User/AcceuilUser.dart';
+import 'package:scan_card/User/DomainesP.dart';
 
 class Domaine extends StatelessWidget {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+//fonction pour le nombre total Technologie
+  Future<int> _getTechnologieCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Technologie')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Technologie')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Santé
+  Future<int> _getSanteCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Santé')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Santé')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Marketing
+  Future<int> _getMarketingCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Marketing')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Marketing')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Immobilier
+  Future<int> _getImmobilierCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Immobilier')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Immobilier')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Education
+  Future<int> _getEducationCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Education')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Education')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Tourisme
+  Future<int> _getTourismeCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Tourisme')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Tourisme')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Energie
+  Future<int> _getEnergieCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Energie')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Energie')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Environnement
+  Future<int> _getEnvironnementCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Environnement')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Environnement')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
+//fonction pour le nombre total Autres
+  Future<int> _getAutresCount() async {
+    QuerySnapshot contacts = await firestore
+        .collection('contacts')
+        .where('domaine', isEqualTo: 'Autres')
+        .get();
+
+    QuerySnapshot cartes = await firestore
+        .collection('CarteScannee')
+        .where('domaine', isEqualTo: 'Autres')
+        .get();
+
+    return contacts.size + cartes.size;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -26,7 +166,13 @@ class Domaine extends StatelessWidget {
                   ),
                   child: Row(children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AcceuilUser()),
+                        );
+                      },
                       icon: Icon(Icons.arrow_back_ios_new_rounded),
                       iconSize: 25,
                       color: Color(0xFFF9754E),
@@ -64,381 +210,631 @@ class Domaine extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 15),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Technologie",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 20),
+                      child: FutureBuilder<int>(
+                        future: _getTechnologieCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 122,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Technologie",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 100,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TechnologiePage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 75),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Santé",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 80),
+                      child: FutureBuilder<int>(
+                        future: _getSanteCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 174,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Santé",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 153,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SantePage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 135),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Marketing",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 140),
+                      child: FutureBuilder<int>(
+                        future: _getMarketingCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 138,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Marketing",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 117,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MarketingPage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 196),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Immobilier",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 200),
+                      child: FutureBuilder<int>(
+                        future: _getImmobilierCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 132,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Immobilier",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 110,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImmobilierPage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 258),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Education",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 260),
+                      child: FutureBuilder<int>(
+                        future: _getEducationCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 140,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Education",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 115,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EducationPage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 320),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Tourisme",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      child: FutureBuilder<int>(
+                        future: _getTourismeCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 145,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Tourisme",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 120,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TourismePage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 384),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Energie",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 380),
+                      child: FutureBuilder<int>(
+                        future: _getEnergieCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 160,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Energie",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 135,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EnergiePage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 448),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Environnement",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(left: 15, top: 445),
+                      child: FutureBuilder<int>(
+                        future: _getEnvironnementCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 100,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Environnement",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 75,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EnvironnementPage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 510),
-                      child: Container(
-                        width: 290,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 4,
-                              offset: Offset(0, 6), // changes position
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Autres",
-                              style: TextStyle(
-                                fontSize: 18,
-                                // fontWeight: FontWeight.bold,
+                      child: FutureBuilder<int>(
+                        future: _getAutresCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Loading state
+                          } else if (snapshot.hasError) {
+                            return Text('Error');
+                          } else {
+                            int count = snapshot.data ?? 0;
+                            return Container(
+                              width: 290,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 6), // changes position
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 170,
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.library_add_check_rounded),
-                              iconSize: 25,
-                              color: const Color(0xFFF9754E),
-                            )
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text(
+                                    "Autres",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "($count)", // Nombre dynamique
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 145,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AutresPage()),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    iconSize: 25,
+                                    color: const Color(0xFFF9754E),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -446,21 +842,6 @@ class Domaine extends StatelessWidget {
               ),
               SizedBox(
                 height: 30,
-              ),
-              SizedBox(
-                height: 40,
-                width: 150,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF9754E),
-                    minimumSize: const Size(50, 50),
-                  ),
-                  child: const Text(
-                    'Enregister',
-                    style: TextStyle(color: Colors.white, fontSize: 13),
-                  ),
-                ),
               ),
             ],
           ),

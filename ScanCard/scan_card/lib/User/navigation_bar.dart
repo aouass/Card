@@ -71,7 +71,18 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
 
       // Barre de navigation en bas
       bottomNavigationBar: Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              spreadRadius: 0,
+              blurRadius: 4,
+              offset: Offset(0, 2), // changes position
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12),
           child: GNav(

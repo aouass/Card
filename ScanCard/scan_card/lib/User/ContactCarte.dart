@@ -35,6 +35,19 @@ class _ContactCarteState extends State<ContactCarte> {
     'Autres'
   ];
 
+  String? _selectedDomaine;
+  final List<String> _domaines = [
+    'Technologie',
+    'Santé',
+    'Marketing',
+    'Immobilier',
+    'Education',
+    'Tourisme',
+    'Energie',
+    'Environnement',
+    'Autres'
+  ];
+
   // Liste des champs dynamiques
   List<Widget> _additionalFields = [];
 
@@ -51,10 +64,10 @@ class _ContactCarteState extends State<ContactCarte> {
   }
 
   void _saveContact() async {
-
     // Génère un nouvel ID unique pour le contact
-    String contactId = FirebaseFirestore.instance.collection('contacts').doc().id;
-    
+    String contactId =
+        FirebaseFirestore.instance.collection('contacts').doc().id;
+
     final contactData = {
       'nom': _nomController.text,
       'prenom': _prenomController.text,
@@ -168,13 +181,11 @@ class _ContactCarteState extends State<ContactCarte> {
                     _buildTextField(_adresseController, 'Adresse...',
                         Icons.location_on_outlined),
                     const SizedBox(height: 14),
-
                     _buildCategorieDropdown(), // Dropdown pour le champ catégorie
-
                     const SizedBox(height: 14),
-                    _buildTextField(_domaineController, 'Domaine...',
-                        Icons.domain_verification),
-                    const SizedBox(height: 14),
+                    _buildDomaineDropdown(),
+                    const SizedBox(
+                        height: 14), // Dropdown pour le champ domaine
                     _buildTextField(
                         _noteController, 'Note...', Icons.note_alt_outlined),
 
@@ -183,9 +194,6 @@ class _ContactCarteState extends State<ContactCarte> {
                   ],
                 ),
               ),
-
-
-              
               const SizedBox(height: 40),
               Padding(
                 padding: EdgeInsets.only(left: 15, right: 15),
@@ -312,6 +320,48 @@ class _ContactCarteState extends State<ContactCarte> {
           },
         ),
       ],
+    );
+  }
+
+  // Widget pour le champ Domaine (dropdown)
+  Widget _buildDomaineDropdown() {
+    return SizedBox(
+      width: 300,
+      height: 40,
+      child: DropdownButtonFormField<String>(
+        value: _selectedDomaine,
+        hint: Text('Domaine...'),
+        decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+            prefixIcon: Icon(Icons.domain_verification,
+                color: Color(0xFF21396A), size: 20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(color: Color(0xFF2C2C2C)),
+            ),
+            filled: true,
+            fillColor: Colors.white),
+        items: _domaines.map((String domaine) {
+          return DropdownMenuItem<String>(
+            value: domaine,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  domaine,
+                  style: TextStyle(fontSize: 18), // ajuster la taille du texte
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            _selectedDomaine = newValue;
+          });
+        },
+      ),
     );
   }
 }

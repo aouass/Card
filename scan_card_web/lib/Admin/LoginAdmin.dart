@@ -14,8 +14,12 @@ class _LoginAdminState extends State<LoginAdmin> {
 
   // Nouvelle variable pour gérer la visibilité du mot de passe
   bool _obscureText = true;
+
+  
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
     // TODO: implement build
     return Scaffold(
       body: Stack(
@@ -32,7 +36,7 @@ class _LoginAdminState extends State<LoginAdmin> {
             padding: const EdgeInsets.only(top: 50, left: 30),
             child: Center(
               child: Container(
-                height: 375,
+                height: size.height*0.7,
                 width: 350,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -46,14 +50,22 @@ class _LoginAdminState extends State<LoginAdmin> {
                     ),
                   ],
                 ),
+                
               ),
+              
             ),
           ),
 
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 538, top: 130),
+          
+
+          const SizedBox(height: 20),
+
+          Padding(
+            padding: EdgeInsets.only(left: 15,),
+            child: Column(
+              children: [
+                Padding(
+                padding: const EdgeInsets.only(left: 15, top: 100),
                 child: Container(
                   height: 130,
                   width: 320,
@@ -61,27 +73,18 @@ class _LoginAdminState extends State<LoginAdmin> {
                     color: Color(0xFF21396A),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 120, top: 100),
-                    child: Text(
-                      'Connexion',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 30,),
+                    child: Image.asset(
+                      'Images/scancard-fond_blanc.png',
+                      width: 300,
+                      height: 200,
+                    ),
+         
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          Padding(
-            padding: EdgeInsets.only(left: 550, top: 260),
-            child: Column(
-              children: [
+              
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Column(children: [
@@ -173,50 +176,51 @@ class _LoginAdminState extends State<LoginAdmin> {
                         ),
                       ),
                     ),
-                  ]),
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "Vous n'avez pas de compte ? ",
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Navigue vers la page de connexion
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  InscriptionAdmin()), // Remplace par la page de connexion appropriée
-                        );
-                      },
-                      child: const Text(
-                        "S'inscrire",
+
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 400),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Vous n'avez pas de compte ? ",
                         style: TextStyle(
-                          color: Color(0xFF183E62),
-                          decoration: TextDecoration.underline,
                           fontSize: 14,
                         ),
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: () {
+                          // Navigue vers la page de connexion
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    InscriptionAdmin()), // Remplace par la page de connexion appropriée
+                          );
+                        },
+                        child: const Text(
+                          "S'inscrire",
+                          style: TextStyle(
+                            color: Color(0xFF183E62),
+                            decoration: TextDecoration.underline,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 20),
-          Padding(
-            padding: EdgeInsets.only(left: 650, top: 130),
-            child: Image.asset(
-              'Images/scancard-fond_blanc.png',
-              width: 115,
-              height: 95,
-            ),
-          ),
+                    
+                  ]),
+                ),
+                
+
+          
+          
         ],
       ),
     );

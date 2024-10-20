@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card_web/Admin/LoginAdmin.dart';
+import 'package:scan_card_web/Admin/ProfileAdmin.dart';
 import 'package:scan_card_web/Widgets/SideBar.dart';
 
 void main() async {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginAdmin(),
+      home: Sidebar(),
     );
   }
 }

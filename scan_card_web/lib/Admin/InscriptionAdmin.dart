@@ -17,7 +17,7 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
   // Nouvelle variable pour gérer la visibilité du mot de passe
   bool _obscureText = true;
 
-  // Fonction pour afficher le popup
+// Fonction pour afficher le popup
   void showSuccessPopup(BuildContext context) {
     showDialog(
       context: context,
@@ -94,6 +94,7 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     // TODO: implement build
     return Scaffold(
       body: Stack(
@@ -107,10 +108,10 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(top: 50, left: 650),
+            padding: const EdgeInsets.only(top: 50, left: 30),
             child: Center(
               child: Container(
-                height: 400,
+                height: size.height * 0.7,
                 width: 350,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -128,183 +129,186 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
             ),
           ),
 
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 848, top: 130),
-                child: Container(
-                  height: 130,
-                  width: 320,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF21396A),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 120, top: 100),
-                    child: Text(
-                      'Connexion',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+          const SizedBox(height: 20),
+
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, top: 100),
+                    child: Container(
+                      height: 130,
+                      width: 320,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF21396A),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 30,
+                        ),
+                        child: Image.asset(
+                          'Images/scancard-fond_blanc.png',
+                          width: 300,
+                          height: 200,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          Padding(
-            padding: EdgeInsets.only(left: 860, top: 260),
-            child: Column(children: [
-              const SizedBox(height: 12),
-              SizedBox(
-                width: 300, // Largeur personnalisée
-                height: 40,
-                child: TextField(
-                  controller: Nom,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 8.0),
-                    labelText: 'Nom',
-                    prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Color(0xFF2C2C2C))),
-                    filled: true,
-                    fillColor: Color(0xFFFFFFFF),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: 300, // Largeur personnalisée
-                height: 40,
-                child: TextField(
-                  controller: Prenom,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 8.0),
-                    labelText: 'Prenom',
-                    prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Color(0xFF2C2C2C))),
-                    filled: true,
-                    fillColor: Color(0xFFFFFFFF),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: 300, // Largeur personnalisée
-                height: 40,
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: Email,
-                  onChanged: (value) {
-                    setState(() {
-                      emailError =
-                          RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)
-                              ? ''
-                              : 'Adresse e-mail invalide';
-                    });
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 8.0),
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Color(0xFF2C2C2C))),
-                    filled: true,
-                    fillColor: Color(0xFFFFFFFF),
-                    errorText: emailError.isEmpty ? null : emailError,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: 300, // Largeur personnalisée
-                height: 40,
-                child: TextField(
-                  controller: Mdp,
-                  obscureText: _obscureText, // Utilise la variable d'état
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 8.0),
-                      labelText: 'Mot de Passe',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: Column(children: [
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: 300, // Largeur personnalisée
+                        height: 40,
+                        child: TextField(
+                          controller: Nom,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                            labelText: 'Nom',
+                            prefixIcon: const Icon(Icons.person),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF2C2C2C))),
+                            filled: true,
+                            fillColor: Color(0xFFFFFFFF),
+                          ),
                         ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: 300, // Largeur personnalisée
+                        height: 40,
+                        child: TextField(
+                          controller: Prenom,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                            labelText: 'Prenom',
+                            prefixIcon: const Icon(Icons.person),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF2C2C2C))),
+                            filled: true,
+                            fillColor: Color(0xFFFFFFFF),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: 300, // Largeur personnalisée
+                        height: 40,
+                        child: TextField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: Email,
+                          onChanged: (value) {
+                            setState(() {
+                              emailError =
+                                  RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)
+                                      ? ''
+                                      : 'Adresse e-mail invalide';
+                            });
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    BorderSide(color: Color(0xFF2C2C2C))),
+                            filled: true,
+                            fillColor: Color(0xFFFFFFFF),
+                            errorText: emailError.isEmpty ? null : emailError,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: 300, // Largeur personnalisée
+                        height: 40,
+                        child: TextField(
+                          controller: Mdp,
+                          obscureText:
+                              _obscureText, // Utilise la variable d'état
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 8.0),
+                              labelText: 'Mot de Passe',
+                              prefixIcon: const Icon(Icons.lock),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  // Inverse l'état pour afficher ou masquer le mot de passe
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF2C2C2C))),
+                              filled: true,
+                              fillColor:
+                                  Colors.white // Couleur de fond du champ
+                              ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      ElevatedButton(
                         onPressed: () {
-                          // Inverse l'état pour afficher ou masquer le mot de passe
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
+                          String email = Email.text.trim();
+
+                          if (emailError.isEmpty && email.isNotEmpty) {
+                            AuthServiceAdmin()
+                                .signUpAdmin(
+                              Email.text,
+                              Mdp.text,
+                              Nom.text,
+                              Prenom.text,
+                            )
+                                .then((result) {
+                              // Appel du popup si l'inscription est réussie
+                              if (result != null) {
+                                showSuccessPopup(context);
+                              }
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text("Veuillez entrer un email valide.")),
+                            );
+                          }
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF183E62),
+                        ),
+                        child: const Text(
+                          "S'inscrire",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
                       ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(color: Color(0xFF2C2C2C))),
-                      filled: true,
-                      fillColor: Colors.white // Couleur de fond du champ
-                      ),
-                ),
+                    ]),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 25,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  String email = Email.text.trim();
-
-                  if (emailError.isEmpty && email.isNotEmpty) {
-                    AuthServiceAdmin()
-                        .signUpAdmin(
-                      Email.text,
-                      Mdp.text,
-                      Nom.text,
-                      Prenom.text,
-                    )
-                        .then((result) {
-                      // Appel du popup si l'inscription est réussie
-                      if (result != null) {
-                        showSuccessPopup(context);
-                      }
-                    });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("Veuillez entrer un email valide.")),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF183E62),
-                ),
-                child: const Text(
-                  "S'inscrire",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ]),
-          ),
-
-          const SizedBox(height: 20),
-          Padding(
-            padding: EdgeInsets.only(left: 960, top: 130),
-            child: Image.asset(
-              'image/scancard-fond_blanc.png',
-              width: 115,
-              height: 95,
             ),
           ),
         ],

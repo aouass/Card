@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scan_card/Service/auth_service_User.dart';
+import 'package:scan_card/User/LanguageSelectionPage.dart';
+import 'package:scan_card/generated/l10n.dart';
 
 class ParametreUser extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -42,7 +44,7 @@ class ParametreUser extends StatelessWidget {
                 // Ferme le dialog
                 Navigator.of(context).pop();
               },
-              child: const Text("Annuler"),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () {
@@ -58,7 +60,7 @@ class ParametreUser extends StatelessWidget {
                   );
                 }
               },
-              child: const Text("Réinitialiser"),
+              child: Text(S.of(context).reset),
             ),
           ],
         );
@@ -100,22 +102,22 @@ class ParametreUser extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Sauvegarder les contacts"),
+          title: Text(S.of(context).contactSave),
           content: const Text(
-              "Voulez-vous sauvegarder les contacts de Firestore dans votre téléphone ?"),
+              "Voulez-vous sauvegarder les contacts  dans votre téléphone ?"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Ferme le dialog
               },
-              child: const Text("Annuler"),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Ferme le dialog
                 _saveContactsToPhone(context);
               },
-              child: const Text("Sauvegarder"),
+              child: Text(S.of(context).save),
             ),
           ],
         );
@@ -135,7 +137,7 @@ class ParametreUser extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(); // Ferme le dialog
               },
-              child: const Text("Non"),
+              child: Text(S.of(context).no),
             ),
             TextButton(
               onPressed: () {
@@ -143,7 +145,7 @@ class ParametreUser extends StatelessWidget {
                 AuthService()
                     .signOut(context); // Appelle la méthode de déconnexion
               },
-              child: const Text("Oui"),
+              child: Text(S.of(context).yes),
             ),
           ],
         );
@@ -191,10 +193,11 @@ class ParametreUser extends StatelessWidget {
               const SizedBox(height: 60),
               GestureDetector(
                 onTap: () {
-                  //  Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => LanguageSelectionPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LanguageSelectionPage()),
+                  );
                 },
                 child: Container(
                   width: 300,
@@ -211,7 +214,7 @@ class ParametreUser extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       SizedBox(
                         width: 15,

@@ -1,40 +1,36 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:scan_card/User/SplashScreen1.dart'; // Assurez-vous que cela correspond à votre structure de projet
-// import 'firebase_options.dart';
-// import 'generated/l10n.dart'; 
+import 'package:scan_card/generated/l10n.dart'; // Import des traductions
+
 class LanguageSelectionPage extends StatelessWidget {
-  final Function(Locale) onLocaleChange;
-
-  LanguageSelectionPage({required this.onLocaleChange});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Language'),
+        title: Text(S.of(context).choose_language), // Titre traduit
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                onLocaleChange(Locale('fr')); // Changer vers le français
-              },
-              child: Text('Français'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                onLocaleChange(Locale('en')); // Changer vers l'anglais
-              },
-              child: Text('English'),
-            ),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ListTile(
+            title: Text('Français'),
+            onTap: () {
+              _changeLanguage(context, const Locale('fr'));
+            },
+          ),
+          ListTile(
+            title: Text('English'),
+            onTap: () {
+              _changeLanguage(context, const Locale('en'));
+            },
+          ),
+        ],
       ),
     );
+  }
+
+  void _changeLanguage(BuildContext context, Locale locale) {
+    // Met à jour la locale dans l'application
+    S.load(locale);
+    Navigator.of(context).pop(); // Retourne à la page précédente
   }
 }

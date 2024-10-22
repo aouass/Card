@@ -254,7 +254,7 @@ Future<void> pickImageFromGallery() async {
                                         height: 10,
                                       ),
                                       const Text(
-                                        "Scanner une ",
+                                        "Scanner votre ",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.black,

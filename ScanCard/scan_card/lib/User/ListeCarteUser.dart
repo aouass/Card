@@ -234,59 +234,92 @@ class ListeCarteUser extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          height: 220,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Options',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                leading: const Icon(Icons.edit, color: Colors.blue),
-                title: const Text('Modifier'),
-                onTap: () {
-                  // Appeler la logique de modification ici
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text('Supprimer'),
-                onTap: () {
-                  _deleteItem(doc);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.picture_as_pdf, color: Colors.green),
-                title: const Text('Exporter en PDF'),
-                onTap: () {
-                  _exportAsPDF(doc);
-                  Navigator.pop(context);
-                },
-              ),
-              // ListTile(
-              //   leading: const Icon(Icons.file_copy, color: Colors.orange),
-              //   title: const Text('Exporter en CSV'),
-              //   onTap: () {
-              //     _exportAsCSV(doc);
-              //     Navigator.pop(context);
-              //   },
-              // ),
-            ],
+        return SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(16.0),
+            height: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Options',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                ListTile(
+                  leading: const Icon(Icons.edit, color: Colors.blue),
+                  title: const Text('Modifier'),
+                  onTap: () {
+                    // Appeler la logique de modification ici
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete, color: Colors.red),
+                  title: const Text('Supprimer'),
+                  onTap: () {
+                    _deleteItem(context,
+                        doc); // Appel de la fonction avec le contexte et le document
+                  },
+                ),
+                ListTile(
+                  leading:
+                      const Icon(Icons.picture_as_pdf, color: Colors.green),
+                  title: const Text('Exporter en PDF'),
+                  onTap: () {
+                    _exportAsPDF(doc);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.file_copy, color: Colors.orange),
+                  title: const Text('Exporter en CSV'),
+                  onTap: () {
+                    _exportAsCSV(doc);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  void _deleteItem(DocumentSnapshot doc) {
-    FirebaseFirestore.instance.collection('contacts').doc(doc.id).delete();
-    // Même chose pour 'cartes_scannees'
+  void _deleteItem(BuildContext context, DocumentSnapshot doc) {
+    // Afficher une boîte de dialogue de confirmation
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmer la suppression'),
+          content: Text('Êtes-vous sûr de vouloir supprimer cet élément ?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fermer la boîte de dialogue
+              },
+              child: Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Supprimer l'élément si l'utilisateur confirme
+                FirebaseFirestore.instance
+                    .collection('contacts')
+                    .doc(doc.id)
+                    .delete();
+                // Vous pouvez également supprimer de 'cartes_scannees' ici
+                Navigator.of(context)
+                    .pop(); // Fermer la boîte de dialogue après la suppression
+              },
+              child: Text('Supprimer'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _exportAsPDF(DocumentSnapshot doc) async {
@@ -315,11 +348,17 @@ class ListeCarteUser extends StatelessWidget {
     Share.shareXFiles([xFile], text: 'Contact en PDF');
   }
 
-  // void _exportAsCSV(DocumentSnapshot doc) {
-  //   // Exporter les données sous forme de CSV
-  //   final data = doc.data();
-  //   final csvData = "Profession,Email\n${data?['profession']},${data?['email']}";
-  //   // Partager ou sauvegarder le fichier CSV
-  //   Share.share(csvData, subject: 'Contact exporté en CSV');
-  // }
+  void _exportAsCSV(DocumentSnapshot doc) {
+    // Exporter les données sous forme de CSV
+    final data = doc.data() as Map<String, dynamic>?; // Cast au bon type
+    if (data != null) {
+      final csvData =
+          "Profession,Email\n${data['profession']},${data['email']}";
+
+      // Partager ou sauvegarder le fichier CSV
+      Share.share(csvData, subject: 'Contact exporté en CSV');
+    } else {
+      print('Aucune donnée trouvée pour ce document.');
+    }
+  }
 }

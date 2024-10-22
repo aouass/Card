@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/Service/Contact_service.dart';
-import 'package:scan_card/User/AcceuilUser.dart';
+import 'package:scan_card/User/navigation_bar.dart';
 
 class ContactCarte extends StatefulWidget {
   @override
@@ -141,7 +141,8 @@ class _ContactCarteState extends State<ContactCarte> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => AcceuilUser()),
+                        MaterialPageRoute(
+                            builder: (context) => MyNavigationBar()),
                       );
                     },
                     icon: Icon(Icons.arrow_back_ios_new_rounded),

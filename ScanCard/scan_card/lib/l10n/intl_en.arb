@@ -1,7 +1,16 @@
 {
   "@@locale": "en",
+  "choose_language": "Choose language",
   "appTitle": "ScanCard",
   "welcomeMessage": "Welcome to ScanCard",
-  "scanButton": "Scan your card"
+  "scanButton": "Scan your card",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "no": "No",
+  "yes": "Yes",
+  "save": "Save",
+  "domain": "Domain",
+  "contactSave": "Back up contacts",
+  "savePhone": "Do you want to backup contacts in your phone?"
 }
 

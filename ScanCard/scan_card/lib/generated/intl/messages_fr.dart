@@ -23,9 +23,21 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "appTitle": MessageLookupByLibrary.simpleMessage("ScanCard"),
-        "scanButton":
-            MessageLookupByLibrary.simpleMessage("Scannez votre carte"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Annuler"),
+        "choose_language":
+            MessageLookupByLibrary.simpleMessage("Choisir la langue"),
+        "contactSave":
+            MessageLookupByLibrary.simpleMessage("Sauvegarder les contacts"),
+        "domain": MessageLookupByLibrary.simpleMessage("Domaine"),
+        "no": MessageLookupByLibrary.simpleMessage("Non"),
+        "reset": MessageLookupByLibrary.simpleMessage("Réinitialiser"),
+        "save": MessageLookupByLibrary.simpleMessage("Sauvegarder"),
+        "savePhone": MessageLookupByLibrary.simpleMessage(
+            "Voulez-vous sauvegarder les contacts  dans votre téléphone ?"),
+        "scanButton": MessageLookupByLibrary.simpleMessage(
+            "Scannez votre carte de visite"),
         "welcomeMessage":
-            MessageLookupByLibrary.simpleMessage("Bienvenue sur ScanCard")
+            MessageLookupByLibrary.simpleMessage("Bienvenue sur ScanCard"),
+        "yes": MessageLookupByLibrary.simpleMessage("Oui")
       };
 }

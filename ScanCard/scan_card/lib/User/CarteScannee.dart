@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/Service/Scan_service.dart';
-import 'package:scan_card/User/AcceuilUser.dart'; // Assure-toi que ton service ScanService est importé
+import 'package:scan_card/User/navigation_bar.dart'; // Assure-toi que ton service ScanService est importé
 
 class CarteScannee extends StatefulWidget {
   @override
@@ -162,19 +162,25 @@ class _CarteScanneeState extends State<CarteScannee> {
     Map<String, String> extractedData = {};
 
     // Utilisation d'expressions régulières pour identifier les différents éléments
+    //  capturer une adresse e-mail valide en utilisant un modèle spécifique qui correspond à une suite de caractères avant et après le symbole @, suivie d'un domaine avec une extension de 2 à 7 lettres (comme .com, .org, etc.).
     RegExp emailRegex = RegExp(r'\b[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b');
+
     RegExp nomRegex =
         RegExp(r'(?<=Nom:)\s*(?:\w+|\b[A-Z]+\b)', caseSensitive: false);
     RegExp prenomRegex =
-        RegExp(r'(?<=Prénom:)\s*(?:[A-Z][a-z]+|\w+)', caseSensitive: false);
+        RegExp(r'(?<=Prénom:)\s*([A-Z][a-z]+|\w+)', caseSensitive: false);
     RegExp entrepriseRegex =
         RegExp(r'(?<=Entreprise:)\s*(\w+)', caseSensitive: false);
     RegExp professionRegex =
         RegExp(r'\b([A-Z][a-z]+ [A-Z][a-z]+)\b', caseSensitive: false);
-    RegExp adresseRegex =
-        RegExp(r'(?:📍\s*(\w+))|([A-Z][a-z]+ [A-Z]+)', caseSensitive: false);
-    RegExp personnelRegex = RegExp(r'\b(?:[67]\d{9,14}|\+\d{8,14})\b');
-// Détecte des numéros de 10 à 15 chiffres
+// Les mots qui commencent par une majuscule et Les espaces, les tirets, les virgules, et d'autres caractères acceptables pour une adresse.
+    RegExp adresseRegex = RegExp(
+        r'([A-Z][a-zA-Z0-9\s,.-]*)(?:\s+[A-Z][a-zA-Z0-9\s,.-]*)*',
+        caseSensitive: false);
+
+// cette expression régulière correspondra uniquement aux numéros de téléphone commençant par "223" ou "+223", suivis de 8 chiffres.
+    RegExp personnelRegex = RegExp(
+        r'(?:(?:\+223\s?|223\s?\(|\(223\)\s?)\d{2}\s?\d{2}\s?\d{2}\s?\d{2})');
 
     // Chercher et assigner les valeurs aux champs
     extractedData['email'] =
@@ -224,7 +230,8 @@ class _CarteScanneeState extends State<CarteScannee> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => AcceuilUser()),
+                        MaterialPageRoute(
+                            builder: (context) => MyNavigationBar()),
                       );
                     },
                     icon: Icon(Icons.arrow_back_ios_new_rounded),

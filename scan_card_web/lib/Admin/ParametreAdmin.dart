@@ -60,109 +60,140 @@ class _ParametreAdminState extends State<ParametreAdmin> {
               ],
             ),
           ),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Container(
             height: 200,
             width: 940,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10)
-
-            ),
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 25),
                   child: Container(
-                    height: 140,
+                    height: 150,
                     width: 850,
                     decoration: BoxDecoration(
-                      color: Color(0xFF21396A),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
+                        color: Color(0xFF21396A),
+                        borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       children: [
                         Row(
                           children: [
-                            SizedBox(width: 20,),
-                            const Icon(Icons.groups, color: Colors.white,size: 40,
+                            const SizedBox(
+                              width: 10,
                             ),
-                            SizedBox(width: 150,),
-                            const Text("Comptes Utilisateurs", style: TextStyle(
+                            const Icon(
+                              Icons.groups,
                               color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                            ),),
-                            SizedBox(width: 150,),
+                              size: 40,
+                            ),
+                            SizedBox(
+                              width: 150,
+                            ),
+                            const Text(
+                              "Comptes Utilisateurs",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 150,
+                            ),
                             IconButton(
-                              onPressed: (){},
-                               icon: Icon(Icons.arrow_right, color: Colors.white,size:40,)  )
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.arrow_right,
+                                  color: Colors.white,
+                                  size: 40,
+                                ))
                           ],
                         ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Row(
                           children: [
-                            SizedBox(width: 20,),
-                            const Icon(Icons.cached_rounded, color: Colors.white,size: 40,
+                            SizedBox(
+                              width: 10,
                             ),
-                            SizedBox(width: 150,),
-                            const Text("Renitialiser mot de passe", style: TextStyle(
+                            const Icon(
+                              Icons.cached_rounded,
                               color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                            ),),
-                            SizedBox(width: 110,),
+                              size: 40,
+                            ),
+                            SizedBox(
+                              width: 150,
+                            ),
+                            const Text(
+                              "Renitialiser mot de passe",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 110,
+                            ),
                             IconButton(
-                              onPressed: (){},
-                               icon: Icon(Icons.arrow_right, color: Colors.white,size:40,)  )
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.arrow_right,
+                                  color: Colors.white,
+                                  size: 40,
+                                ))
                           ],
                         ),
-                        SizedBox(height: 80,),
-                        Container(
-           
-                            height: 270,
-                            width: 700,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              columns: const [
-                                DataColumn(label: Text('Nom du client')),
-                                DataColumn(label: Text('Entreprise')),
-                                DataColumn(label: Text('Email')),
-                                DataColumn(label: Text('Téléphone')),
-                              ],
-                              rows: [
-                                _buildDataRow('Jane Cooper', 'Microsoft', 'jane@microsoft.com', true),
-                                _buildDataRow('Floyd Miles', 'Yahoo', 'floyd@yahoo.com', false),
-                                _buildDataRow('Ronald Richards', 'Adobe', 'ronald@adobe.com', false),
-                                _buildDataRow('Marvin McKinney', 'Tesla', 'marvin@tesla.com', true),
-                                
-                              
-                              ],
-                            ),
-                            ),
-                                    ),
-                         ),
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
-          )
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Container(
+            height: 270,
+            width: 800,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 90),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: const [
+                    DataColumn(label: Text('Nom du client')),
+                    DataColumn(label: Text('Entreprise')),
+                    DataColumn(label: Text('Email')),
+                    DataColumn(label: Text('Statut')),
+                  ],
+                  rows: [
+                    _buildDataRow(
+                        'Jane Cooper', 'Microsoft', 'jane@microsoft.com', true),
+                    _buildDataRow(
+                        'Floyd Miles', 'Yahoo', 'floyd@yahoo.com', false),
+                    _buildDataRow(
+                        'Ronald Richards', 'Adobe', 'ronald@adobe.com', false),
+                    _buildDataRow(
+                        'Marvin McKinney', 'Tesla', 'marvin@tesla.com', true),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-
-  DataRow _buildDataRow(String name, String company, String email, bool isActive) {
+  DataRow _buildDataRow(
+      String name, String company, String email, bool isActive) {
     return DataRow(
       cells: [
         DataCell(Text(name)),
@@ -170,7 +201,7 @@ class _ParametreAdminState extends State<ParametreAdmin> {
         DataCell(Text(email)),
         DataCell(
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: isActive ? Colors.green[100] : Colors.red[100],
               borderRadius: BorderRadius.circular(8),

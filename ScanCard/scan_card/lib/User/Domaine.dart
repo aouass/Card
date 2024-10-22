@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:scan_card/User/AcceuilUser.dart';
 import 'package:scan_card/User/DomainesP.dart';
+import 'package:scan_card/User/navigation_bar.dart';
 
 class Domaine extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -170,7 +170,7 @@ class Domaine extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AcceuilUser()),
+                              builder: (context) => MyNavigationBar()),
                         );
                       },
                       icon: Icon(Icons.arrow_back_ios_new_rounded),
@@ -245,14 +245,12 @@ class Domaine extends StatelessWidget {
                                     "Technologie",
                                     style: TextStyle(
                                       fontSize: 18,
-                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     "($count)", // Nombre dynamique
                                     style: const TextStyle(
                                       fontSize: 18,
-                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(

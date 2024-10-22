@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:scan_card/User/AcceuilUser.dart';
 import 'package:scan_card/User/CategoriesP.dart';
+import 'package:scan_card/User/navigation_bar.dart';
 
 class CategorieUser extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -110,7 +110,7 @@ class CategorieUser extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AcceuilUser()),
+                              builder: (context) => MyNavigationBar()),
                         );
                       },
                       icon: Icon(Icons.arrow_back_ios_new_rounded),

@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Choose language`
+  String get choose_language {
+    return Intl.message(
+      'Choose language',
+      name: 'choose_language',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `ScanCard`
   String get appTitle {
     return Intl.message(
@@ -75,6 +85,86 @@ class S {
     return Intl.message(
       'Scan your card',
       name: 'scanButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get reset {
+    return Intl.message(
+      'Reset',
+      name: 'reset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Domain`
+  String get domain {
+    return Intl.message(
+      'Domain',
+      name: 'domain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back up contacts`
+  String get contactSave {
+    return Intl.message(
+      'Back up contacts',
+      name: 'contactSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to backup contacts in your phone?`
+  String get savePhone {
+    return Intl.message(
+      'Do you want to backup contacts in your phone?',
+      name: 'savePhone',
       desc: '',
       args: [],
     );

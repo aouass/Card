@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -15,6 +16,21 @@ class ContactUser extends StatefulWidget {
 class _ContactUserState extends State<ContactUser> {
   String searchQuery = "";
   Stream<QuerySnapshot>? contactStream;
+
+  Future<Map<String, dynamic>> _getUserData() async {
+    File? _imageFile;
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return {};
+    }
+
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    return userDoc.data() as Map<String, dynamic>;
+  }
 
   @override
   void initState() {
@@ -45,216 +61,253 @@ class _ContactUserState extends State<ContactUser> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.symmetric(vertical: 1),
-          width: double.infinity,
-          decoration: const BoxDecoration(color: Color(0xFF21396A)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 30),
-              const Padding(
-                padding: EdgeInsets.only(left: 90, right: 90),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: FutureBuilder<Map<String, dynamic>>(
+            future: _getUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Erreur: ${snapshot.error}'));
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('Aucune information utilisateur.'));
+              }
+
+              var userData = snapshot.data!;
+              String role = userData['role'] ?? 'Rôle inconnu';
+              String nom = userData['nom'] ?? 'Nom inconnu';
+              String prenom = userData['prenom'] ?? 'Prenom inconnu';
+
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                width: double.infinity,
+                decoration: const BoxDecoration(color: Color(0xFF21396A)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 35,
-                          backgroundImage: AssetImage('image/Ellipse.png'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.only(left: 85, right: 80, top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "Salut , Aoua SOW",
-                                style: TextStyle(
-                                  color: Color(0xFFFFFFFF),
-                                  fontSize: 18,
+                              CircleAvatar(
+                                radius: 35,
+                                backgroundImage:
+                                    AssetImage('image/Ellipse.png'),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8, right: 8),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Salut , $prenom $nom",
+                                      style: TextStyle(
+                                        color: Color(0xFFFFFFFF),
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    )
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              // Bloc du milieu
-              Expanded(
-                child: Container(
-                  height: 200,
-                  width: 500,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                onChanged: (value) => searchContacts(value),
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 1, right: 1),
-                                  prefixIcon: const Icon(Icons.search),
-                                  hintText: "Recherche Contact",
-                                  hintStyle:
-                                      const TextStyle(color: Color(0xFF000000)),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xFF2C2C2C)),
-                                  ),
-                                  filled: true,
-                                  fillColor:
-                                      const Color.fromARGB(243, 243, 243, 243),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Column(
-                              children: [
-                                const Text("Soumettre un ticket",
-                                    style: TextStyle(fontSize: 14)),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ContactCarte()),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.add_circle_rounded,
-                                      color: Color(0xFFF9754E), size: 40),
-                                ),
-                              ],
-                            ),
-                          ],
+                    // Bloc du milieu
+                    Expanded(
+                      child: Container(
+                        height: 200,
+                        width: 500,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFFFFFF),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          ),
                         ),
-                        const SizedBox(height: 34),
-                        Expanded(
-                          child: StreamBuilder<QuerySnapshot>(
-                            stream: contactStream,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-
-                              if (!snapshot.hasData ||
-                                  snapshot.data!.docs.isEmpty) {
-                                return const Center(
-                                    child: Text("Aucun contact trouvé"));
-                              }
-
-                              final contacts = snapshot.data!.docs;
-
-                              return ListView.builder(
-                                itemCount: contacts.length,
-                                itemBuilder: (context, index) {
-                                  var contact = contacts[index];
-                                  return Center(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16.0),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Color(0xFF21396A).withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            color: Colors.white, width: 2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      onChanged: (value) =>
+                                          searchContacts(value),
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.only(
+                                            left: 1, right: 1),
+                                        prefixIcon: const Icon(Icons.search),
+                                        hintText: "Recherche Contact",
+                                        hintStyle: const TextStyle(
+                                            color: Color(0xFF000000)),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                          borderSide: const BorderSide(
+                                              color: Color(0xFF2C2C2C)),
+                                        ),
+                                        filled: true,
+                                        fillColor: const Color.fromARGB(
+                                            243, 243, 243, 243),
                                       ),
-                                      width: 310,
-                                      height: 110,
-                                      child: Row(
-                                        children: [
-                                          // Image à gauche
-                                          Container(
-                                            width: 110,
-                                            height: 70,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Column(
+                                    children: [
+                                      const Text("Créer un contact",
+                                          style: TextStyle(fontSize: 14)),
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ContactCarte()),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                            Icons.add_circle_rounded,
+                                            color: Color(0xFFF9754E),
+                                            size: 40),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 34),
+                              Expanded(
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: contactStream,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    }
+
+                                    if (!snapshot.hasData ||
+                                        snapshot.data!.docs.isEmpty) {
+                                      return const Center(
+                                          child: Text("Aucun contact trouvé"));
+                                    }
+
+                                    final contacts = snapshot.data!.docs;
+
+                                    return ListView.builder(
+                                      itemCount: contacts.length,
+                                      itemBuilder: (context, index) {
+                                        var contact = contacts[index];
+                                        return Center(
+                                          child: Container(
+                                            padding: const EdgeInsets.all(16.0),
                                             decoration: BoxDecoration(
-                                              color: Colors.white,
+                                              color: Color(0xFF21396A)
+                                                  .withOpacity(0.2),
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                                  BorderRadius.circular(20),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 2),
                                             ),
-                                          ),
-                                          const SizedBox(width: 20),
-                                          // Texte au milieu
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                            width: 310,
+                                            height: 110,
+                                            child: Row(
                                               children: [
-                                                Text(
-                                                  contact['profession'] ??
-                                                      'Profession',
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        contact['profession'] ??
+                                                            'Profession',
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color(0xFFF9754E),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 5),
+                                                      Text(contact['personnel'] ??
+                                                            'Personnel',
+                                                            style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                            ),
+                                                      const SizedBox(
+                                                          height: 5),
+                                                      Text(
+                                                        contact['email'] ??
+                                                            'Email',
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  contact['email'] ?? 'Email',
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
+                                                // Bouton circulaire à droite pour afficher le popup
+                                                CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor:
+                                                      const Color(0xFFF9754E),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.more_horiz,
+                                                      color: Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      _showOptionsBottomSheet(
+                                                          context, contact);
+                                                    },
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          // Bouton circulaire à droite pour afficher le popup
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor:
-                                                const Color(0xFFF9754E),
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.more_horiz,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                _showOptionsBottomSheet(
-                                                    context, contact);
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              );
+            }),
       ),
     );
   }

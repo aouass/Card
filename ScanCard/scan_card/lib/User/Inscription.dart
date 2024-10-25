@@ -108,6 +108,14 @@ class _InscriptionState extends State<Inscription> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsets.only(left: 40),
+                child: Image.asset(
+                  'image/Logo_ScanCard.png',
+                  width: 500,
+                  height: 300,
+                ),
+              ),
               const Text(
                 'Inscrivons-nous',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

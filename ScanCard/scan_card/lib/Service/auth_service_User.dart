@@ -105,8 +105,5 @@ class AuthService {
     );
   }
 
-  // Vérifier l'état de connexion de l'utilisateur
-  Stream<User?> get user {
-    return _auth.authStateChanges();
-  }
+ 
 }

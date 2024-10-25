@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scan_card/User/SplashScreen1.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';  // Chemin vers le fichier généré
-// import 'package:easy_localization/easy_localization.dart';
-
 import 'firebase_options.dart';
 
 void main() async {

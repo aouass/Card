@@ -12,12 +12,10 @@ import 'package:scan_card/User/CategorieUser.dart';
 import 'package:scan_card/User/ContactUser.dart';
 import 'package:scan_card/User/Domaine.dart';
 
-
 class AcceuilUser extends StatefulWidget {
   @override
   _AcceuilUserState createState() => _AcceuilUserState();
 }
-
 
 class _AcceuilUserState extends State<AcceuilUser> {
   Uint8List? _imageBytes;
@@ -61,8 +59,7 @@ class _AcceuilUserState extends State<AcceuilUser> {
     textRecognizer.close();
   }
 
-
-Future<void> pickImageFromGallery() async {
+  Future<void> pickImageFromGallery() async {
     final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
@@ -74,7 +71,6 @@ Future<void> pickImageFromGallery() async {
     }
   }
 
-
   Future<void> _uploadImageToFirebase() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null && _imageFile != null) {
@@ -82,15 +78,17 @@ Future<void> pickImageFromGallery() async {
 
       try {
         // Téléchargement de l'image dans Firebase Storage
-        TaskSnapshot snapshot = await FirebaseStorage.instance
-            .ref(filePath)
-            .putFile(_imageFile!);
+        TaskSnapshot snapshot =
+            await FirebaseStorage.instance.ref(filePath).putFile(_imageFile!);
 
         // Récupérer l'URL de l'image
         String downloadUrl = await snapshot.ref.getDownloadURL();
 
         // Mettre à jour l'URL de l'image dans Firestore
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'profileImageUrl': downloadUrl,
         });
 
@@ -147,14 +145,16 @@ Future<void> pickImageFromGallery() async {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap:pickImageFromGallery,
+                                onTap: pickImageFromGallery,
                                 child: CircleAvatar(
                                   radius: 35,
                                   backgroundImage: _imageUrl != null
-                                  ? NetworkImage(_imageUrl!)
-                                  : (profileImageUrl != null && profileImageUrl.isNotEmpty
-                                      ? NetworkImage(profileImageUrl)
-                                      : AssetImage('image/Ellipse.png')) as ImageProvider,
+                                      ? NetworkImage(_imageUrl!)
+                                      : (profileImageUrl != null &&
+                                                  profileImageUrl.isNotEmpty
+                                              ? NetworkImage(profileImageUrl)
+                                              : AssetImage('image/Ellipse.png'))
+                                          as ImageProvider,
                                 ),
                               ),
                               Padding(
@@ -209,7 +209,7 @@ Future<void> pickImageFromGallery() async {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 image: const DecorationImage(
-                                  image: AssetImage('image/Group.png'),
+                                  image: AssetImage('image/Rectangle.png'),
                                   fit: BoxFit.cover, // Ajustement de l'image
                                 ),
                               ),
@@ -300,12 +300,12 @@ Future<void> pickImageFromGallery() async {
                                         children: [
                                           IconButton(
                                             onPressed: () {
-                                               Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Domaine()),
-                                          );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Domaine()),
+                                              );
                                             },
                                             icon: Icon(Icons
                                                 .domain_verification_rounded),
@@ -336,8 +336,8 @@ Future<void> pickImageFromGallery() async {
                             Row(
                               children: [
                                 Container(
-                                  height: 130,
-                                  width: 145,
+                                  height: 105,
+                                  width: 154,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
@@ -353,28 +353,24 @@ Future<void> pickImageFromGallery() async {
                                   ),
                                   child: Column(
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 80),
-                                        child: IconButton(
+                                        IconButton(
                                           onPressed: () {
-                                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategorieUser()),
-                                          );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CategorieUser()),
+                                            );
                                           },
                                           icon: Icon(Icons.category_outlined),
                                           color: Color(0xFFF9754E),
                                           iconSize: 40,
                                         ),
-                                      ),
+                                      
                                       const SizedBox(
-                                        height: 40,
+                                        height: 20,
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 60),
-                                        child: Text(
+                                      Text(
                                           "Catégorie",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -383,18 +379,18 @@ Future<void> pickImageFromGallery() async {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ),
+                                      
                                     ],
                                   ),
                                 ),
                                 const SizedBox(
-                                  width: 30,
+                                  width: 12,
                                 ),
                                 Column(
                                   children: [
                                     Container(
-                                      height: 130,
-                                      width: 145,
+                                      height: 105,
+                                      width: 154,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
@@ -411,9 +407,7 @@ Future<void> pickImageFromGallery() async {
                                       ),
                                       child: Column(
                                         children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 80),
-                                            child: IconButton(
+                                          IconButton(
                                               onPressed: () {
                                                 Navigator.push(
                                                   context,
@@ -427,13 +421,12 @@ Future<void> pickImageFromGallery() async {
                                               color: Color(0xFFF9754E),
                                               iconSize: 40,
                                             ),
-                                          ),
+                                          
                                           const SizedBox(
-                                            height: 40,
+                                            height: 20,
                                           ),
-                                          const Padding(
-                                            padding: EdgeInsets.only(right: 60),
-                                            child: Text(
+                                          
+                                            Text(
                                               "Contacts",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -442,7 +435,7 @@ Future<void> pickImageFromGallery() async {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                          ),
+                                         
                                         ],
                                       ),
                                     ),

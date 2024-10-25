@@ -75,17 +75,6 @@ class ListeCarteUser extends StatelessWidget {
                           height: 110,
                           child: Row(
                             children: [
-                              // Image à gauche
-                              Container(
-                                width: 110,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              // Texte au milieu
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,10 +85,21 @@ class ListeCarteUser extends StatelessWidget {
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                        color: Color(0xFFF9754E),
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(
+                                        height: 5),
+                                    Text(contact['personnel'] ??
+                                          'Personnel',
+                                          style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight:
+                                            FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                          ),
+                                    const SizedBox(height: 5),
                                     Text(
                                       contact['email'] ?? 'Email',
                                       style: const TextStyle(
@@ -138,7 +138,7 @@ class ListeCarteUser extends StatelessWidget {
               // StreamBuilder pour récupérer les cartes scannées
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('cartes_scannees')
+                    .collection('CarteScannee')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -166,33 +166,33 @@ class ListeCarteUser extends StatelessWidget {
                           height: 110,
                           child: Row(
                             children: [
-                              // Image à gauche
-                              Container(
-                                width: 110,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              // Texte au milieu
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      carte['titre'] ?? 'Titre',
+                                      carte['profession'] ?? 'Profession',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                        color: Color(0xFFF9754E),
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(
+                                        height: 5),
+                                    Text(carte['personnel'] ??
+                                          'Personnel',
+                                          style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight:
+                                            FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                          ),
+                                    const SizedBox(height: 5),
                                     Text(
-                                      carte['description'] ?? 'Description',
+                                      carte['email'] ?? 'Email',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
@@ -259,8 +259,7 @@ class ListeCarteUser extends StatelessWidget {
                   leading: const Icon(Icons.delete, color: Colors.red),
                   title: const Text('Supprimer'),
                   onTap: () {
-                    _deleteItem(context,
-                        doc); // Appel de la fonction avec le contexte et le document
+                     _deleteItem(context, doc, doc); // Appeler la fonction _deleteItem
                   },
                 ),
                 ListTile(
@@ -288,39 +287,59 @@ class ListeCarteUser extends StatelessWidget {
     );
   }
 
-  void _deleteItem(BuildContext context, DocumentSnapshot doc) {
-    // Afficher une boîte de dialogue de confirmation
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirmer la suppression'),
-          content: Text('Êtes-vous sûr de vouloir supprimer cet élément ?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Fermer la boîte de dialogue
-              },
-              child: Text('Annuler'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Supprimer l'élément si l'utilisateur confirme
-                FirebaseFirestore.instance
+  void _deleteItem(BuildContext context, DocumentSnapshot contactDoc, DocumentSnapshot carteScanneeDoc) {
+  // Afficher une boîte de dialogue de confirmation
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmer la suppression'),
+        content: const Text('Êtes-vous sûr de vouloir supprimer ces éléments ?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Fermer la boîte de dialogue
+            },
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () async {
+              // Supprimer le contact
+              if (contactDoc != null) {
+                await FirebaseFirestore.instance
                     .collection('contacts')
-                    .doc(doc.id)
-                    .delete();
-                // Vous pouvez également supprimer de 'cartes_scannees' ici
-                Navigator.of(context)
-                    .pop(); // Fermer la boîte de dialogue après la suppression
-              },
-              child: Text('Supprimer'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+                    .doc(contactDoc.id)
+                    .delete()
+                    .then((_) {
+                      print('Contact supprimé');
+                    }).catchError((error) {
+                      print('Erreur lors de la suppression du contact : $error');
+                    });
+              }
+
+              // Supprimer la carte scannée
+              if (carteScanneeDoc != null) {
+                await FirebaseFirestore.instance
+                    .collection('CarteScannee')
+                    .doc(carteScanneeDoc.id)
+                    .delete()
+                    .then((_) {
+                      print('Carte scannée supprimée');
+                    }).catchError((error) {
+                      print('Erreur lors de la suppression de la carte scannée : $error');
+                    });
+              }
+
+              Navigator.of(context).pop(); // Fermer la boîte de dialogue après la suppression
+            },
+            child: const Text('Supprimer'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   void _exportAsPDF(DocumentSnapshot doc) async {
     final pdf = pw.Document();

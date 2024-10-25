@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/Service/auth_service_User.dart';
 import 'package:scan_card/User/Inscription.dart';
+import 'package:scan_card/generated/l10n.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -14,6 +17,64 @@ class _LoginState extends State<Login> {
 
   // Nouvelle variable pour gérer la visibilité du mot de passe
   bool _obscureText = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> _resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      // Afficher un message de succès (par exemple, un SnackBar)
+      print("Email de réinitialisation envoyé");
+    } catch (e) {
+      // Gérer les erreurs ici
+      print("Erreur lors de l'envoi de l'email de réinitialisation : $e");
+    }
+  }
+
+  void _showEmailDialog(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Réinitialiser le mot de passe"),
+          content: TextField(
+            controller: emailController,
+            decoration: const InputDecoration(
+              hintText: "Entrez votre adresse email",
+            ),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Ferme le dialog
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                String email = emailController.text.trim();
+                if (email.isNotEmpty) {
+                  _resetPassword(email);
+                  Navigator.of(context).pop(); // Ferme le dialog après l'envoi
+                } else {
+                  // Gérer le cas où l'email est vide (facultatif)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Veuillez entrer un email valide")),
+                  );
+                }
+              },
+              child: Text(S.of(context).reset),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +161,7 @@ class _LoginState extends State<Login> {
                 const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
-                    // Implémenter la fonctionnalité "Mot de passe oublié"
+                    _showEmailDialog(context);
                   },
                   child: const Text(
                     'Mot de passe oublié ?',

@@ -69,33 +69,48 @@ class ParametreUser extends StatelessWidget {
   }
 
   Future<void> _saveContactsToPhone(BuildContext context) async {
-    // Demander la permission d'accéder aux contacts
-    var status = await Permission.contacts.request();
-    if (status.isGranted) {
+  // Demander la permission d'accéder aux contacts
+  var status = await Permission.contacts.request();
+  if (status.isGranted) {
+    try {
       // Récupérer les contacts de Firestore
       QuerySnapshot snapshot = await _firestore.collection('contacts').get();
       for (var doc in snapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        // Créer un contact
-        Contact newContact = Contact(
-          givenName: data['nom'], // Assurez-vous que ces clés existent
-          familyName: data['prenom'],
-          emails: [Item(label: "Email", value: data['email'])],
-          phones: [Item(label: "mobile", value: data['personnel'])],
-        );
-        // Enregistrer le contact
-        await ContactsService.addContact(newContact);
+
+        // Vérifiez si les champs requis sont présents
+        if (data.containsKey('nom') && data.containsKey('prenom') && data.containsKey('email') && data.containsKey('personnel')) {
+          // Créer un contact
+          Contact newContact = Contact(
+            givenName: data['nom'],
+            familyName: data['prenom'],
+            emails: [Item(label: "Email", value: data['email'])],
+            phones: [Item(label: "mobile", value: data['personnel'])],
+          );
+          // Enregistrer le contact
+          await ContactsService.addContact(newContact);
+        } else {
+          // Log ou gestion de l'absence de certaines données
+          print("Les champs requis sont manquants pour ce contact.");
+        }
       }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Contacts sauvegardés avec succès")),
       );
-    } else {
+    } catch (e) {
+      // Gérer les erreurs éventuelles
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Permission d'accès aux contacts refusée")),
+        SnackBar(content: Text("Erreur lors de la sauvegarde des contacts : $e")),
       );
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Permission d'accès aux contacts refusée")),
+    );
   }
+}
+
+
 
   void _confirmSaveContacts(BuildContext context) {
     showDialog(

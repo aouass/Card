@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scan_card_web/Admin/InscriptionAdmin.dart';
+import 'package:scan_card_web/Widgets/SideBar.dart';
 import 'package:scan_card_web/service/auth_service_Admin.dart';
 
 class LoginAdmin extends StatefulWidget {
@@ -55,9 +55,10 @@ class _LoginAdminState extends State<LoginAdmin> {
           const SizedBox(height: 20),
 
           Padding(
-            padding: const EdgeInsets.only(left: 15,),
-            child: Column(
-              children: [
+            padding: const EdgeInsets.only(
+              left: 15,
+            ),
+            child: Column(children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 100),
                 child: Container(
@@ -79,8 +80,6 @@ class _LoginAdminState extends State<LoginAdmin> {
                   ),
                 ),
               ),
-
-              
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Column(
@@ -143,7 +142,9 @@ class _LoginAdminState extends State<LoginAdmin> {
                       height: 40,
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: (
+                        
+                      ) {
                         String email = _emailController.text.trim();
                         if (email.isNotEmpty) {
                           AuthServiceAdmin().signInAdmin(_emailController.text,
@@ -173,7 +174,9 @@ class _LoginAdminState extends State<LoginAdmin> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 30,),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -192,7 +195,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      InscriptionAdmin()), // Remplace par la page de connexion appropriée
+                                      Sidebar()), // Remplace par la page de connexion appropriée
                             );
                           },
                           child: const Text(

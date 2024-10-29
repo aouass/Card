@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // Définir les langues supportées
+      // Définir les langues supportée
       supportedLocales: [
         const Locale('en', 'US'), // anglais
         const Locale('fr', 'FR'), // français

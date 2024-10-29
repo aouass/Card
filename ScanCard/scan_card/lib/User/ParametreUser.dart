@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:contacts_service/contacts_service.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/properties/email.dart';
+import 'package:flutter_contacts/properties/phone.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scan_card/Service/auth_service_User.dart';
 import 'package:scan_card/User/LanguageSelectionPage.dart';
@@ -68,27 +72,28 @@ class ParametreUser extends StatelessWidget {
     );
   }
 
-  Future<void> _saveContactsToPhone(BuildContext context) async {
+  
+Future<void> _saveContactsToPhone(BuildContext context) async {
   // Demander la permission d'accéder aux contacts
   var status = await Permission.contacts.request();
   if (status.isGranted) {
     try {
       // Récupérer les contacts de Firestore
-      QuerySnapshot snapshot = await _firestore.collection('contacts').get();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('contacts').get();
       for (var doc in snapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
 
         // Vérifiez si les champs requis sont présents
         if (data.containsKey('nom') && data.containsKey('prenom') && data.containsKey('email') && data.containsKey('personnel')) {
           // Créer un contact
-          Contact newContact = Contact(
-            givenName: data['nom'],
-            familyName: data['prenom'],
-            emails: [Item(label: "Email", value: data['email'])],
-            phones: [Item(label: "mobile", value: data['personnel'])],
-          );
+          Contact newContact = Contact()
+            ..name.first = data['nom']
+            ..name.last = data['prenom']
+            ..emails = [Email(data['email'], label: EmailLabel.home)]
+            ..phones = [Phone(data['personnel'], label: PhoneLabel.mobile)];
+
           // Enregistrer le contact
-          await ContactsService.addContact(newContact);
+          await FlutterContacts.insertContact(newContact);
         } else {
           // Log ou gestion de l'absence de certaines données
           print("Les champs requis sont manquants pour ce contact.");
@@ -109,7 +114,6 @@ class ParametreUser extends StatelessWidget {
     );
   }
 }
-
 
 
   void _confirmSaveContacts(BuildContext context) {

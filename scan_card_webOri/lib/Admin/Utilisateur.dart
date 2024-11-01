@@ -11,46 +11,83 @@ class _UtilisateurState extends State<Utilisateur> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      height: 480,
-      width: 800,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 70),
-        child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('users').snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            }
+      color: Color(0xFFE6E9ED),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 40, top: 25),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.groups_2,
+                  color: Color(0xFF7B809A),
+                  size: 40,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    "Utilisateurs",
+                    style: TextStyle(color: Color(0xFF7B809A), fontSize: 25),
+                  ),
+                ),
 
-            List<DataRow> rows = snapshot.data!.docs.map((doc) {
-              var data = doc.data() as Map<String, dynamic>;
-              return _buildDataRow(
-                data['name'] ?? 'Nom inconnu',
-                data['company'] ?? 'Entreprise inconnue',
-                data['email'] ?? 'Email inconnu',
-                data['isActive'] ?? false,
-              );
-            }).toList();
+                const SizedBox(
+            height: 20,
+          ),
 
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Nom du client')),
-                  DataColumn(label: Text('Entreprise')),
-                  DataColumn(label: Text('Email')),
-                  DataColumn(label: Text('Statut')),
-                ],
-                rows: rows,
+          
+                 
+              ],
+            ),
+          ),
+
+           Container(
+              width: 800,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-            );
-          },
-        ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 70),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('users').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    List<DataRow> rows = snapshot.data!.docs.map((doc) {
+                      var data = doc.data() as Map<String, dynamic>;
+                      return _buildDataRow(
+                        data['nom'] ?? 'Nom inconnu',
+                        data['prenom'] ?? 'Prenon inconnue',
+                        data['email'] ?? 'Email inconnu',
+                        data['isActive'] ?? false,
+                      );
+                    }).toList();
+
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: [
+                          DataColumn(label: Text('Nom du client')),
+                          DataColumn(label: Text('Prenom du client')),
+                          DataColumn(label: Text('Email')),
+                          DataColumn(label: Text('Actions')),
+                        ],
+                        rows: rows,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+        ],
       ),
+      
     );
   }
 

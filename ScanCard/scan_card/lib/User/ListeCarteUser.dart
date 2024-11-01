@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -9,6 +10,10 @@ import 'package:share_plus/share_plus.dart';
 class ListeCarteUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
+     final userId = FirebaseAuth.instance.currentUser?.uid; // Récupérer l'ID de l'utilisateur connecté
+
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -45,10 +50,11 @@ class ListeCarteUser extends StatelessWidget {
               ),
               const SizedBox(height: 60),
 
-              // StreamBuilder pour récupérer les contacts
+              // StreamBuilder pour récupérer les contacts de l'utilisateur
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('contacts')
+                    .where('userId', isEqualTo: userId) // Filtrer par userId
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,17 +94,14 @@ class ListeCarteUser extends StatelessWidget {
                                         color: Color(0xFFF9754E),
                                       ),
                                     ),
-                                    const SizedBox(
-                                        height: 5),
-                                    Text(contact['personnel'] ??
-                                          'Personnel',
-                                          style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight:
-                                            FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                          ),
+                                    const SizedBox(height: 5),
+                                    Text(contact['personnel'] ?? 'Personnel',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                    ),
                                     const SizedBox(height: 5),
                                     Text(
                                       contact['email'] ?? 'Email',
@@ -135,10 +138,11 @@ class ListeCarteUser extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              // StreamBuilder pour récupérer les cartes scannées
+              // StreamBuilder pour récupérer les cartes scannées de l'utilisateur
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('CarteScannee')
+                    .where('userId', isEqualTo: userId) // Filtrer par userId
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -146,8 +150,7 @@ class ListeCarteUser extends StatelessWidget {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(
-                        child: Text("Aucune carte scannée trouvée"));
+                    return const Center(child: Text("Aucune carte scannée trouvée"));
                   }
 
                   final cartesScannees = snapshot.data!.docs;
@@ -179,17 +182,14 @@ class ListeCarteUser extends StatelessWidget {
                                         color: Color(0xFFF9754E),
                                       ),
                                     ),
-                                    const SizedBox(
-                                        height: 5),
-                                    Text(carte['personnel'] ??
-                                          'Personnel',
-                                          style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight:
-                                            FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                          ),
+                                    const SizedBox(height: 5),
+                                    Text(carte['personnel'] ?? 'Personnel',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                    ),
                                     const SizedBox(height: 5),
                                     Text(
                                       carte['email'] ?? 'Email',

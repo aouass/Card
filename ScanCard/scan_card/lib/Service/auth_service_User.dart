@@ -15,7 +15,7 @@ class AuthService {
 
   // Inscription utilisateur
   Future<User?> signUp(
-      String email, String password, String nom, String prenom) async {
+      String email, String password, String nom, String prenom, String imageUrl) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -25,6 +25,7 @@ class AuthService {
         'prenom': prenom,
         'email': email,
         'role': 'utilisateur',
+        'imageUrl':  imageUrl
       });
       return result.user;
     } catch (e) {

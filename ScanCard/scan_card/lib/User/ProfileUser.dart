@@ -78,8 +78,8 @@ class _ProfileUserState extends State<ProfileUser> {
                 ),
                 const SizedBox(height: 10),
                 const CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('image/Ellipse.png'),
+                  radius: 40,
+                  backgroundImage: AssetImage('image/profil.jpg'),
                 ),
                 const SizedBox(height: 15),
                 const Text(

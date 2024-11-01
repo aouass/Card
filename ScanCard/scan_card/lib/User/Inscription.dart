@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:scan_card/Service/FirestorageService.dart';
 import 'package:scan_card/Service/auth_service_User.dart';
 import 'package:scan_card/User/Login.dart';
 
@@ -13,11 +16,24 @@ class _InscriptionState extends State<Inscription> {
   final TextEditingController Email = TextEditingController();
   final TextEditingController Mdp = TextEditingController();
 
-  String emailError = '';
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  final StorageService _storageService = StorageService(); // Instance de StorageService
 
+  Future<void> pickImageFromGallery() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    } else {
+      print('Image non sélectionnée');
+    }
+  }
+
+  String emailError = '';
   bool _obscureText = true;
 
-  // Fonction pour afficher le popup
   void showSuccessPopup(BuildContext context) {
     showDialog(
       context: context,
@@ -31,26 +47,22 @@ class _InscriptionState extends State<Inscription> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Icone du popup
                 const CircleAvatar(
-                  backgroundColor:
-                      Color(0xFFF9754E), // Orange comme dans l'image
+                  backgroundColor: Color(0xFFF9754E),
                   radius: 40,
                   child: Icon(
-                    Icons.check, // Icône de validation
+                    Icons.check,
                     size: 50,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Texte de félicitations
                 const Text(
                   'Félicitations!',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color:
-                        Color(0xFF183E62), // Couleur similaire à celle utilisée
+                    color: Color(0xFF183E62),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -60,7 +72,6 @@ class _InscriptionState extends State<Inscription> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                // Bouton de redirection vers la page de connexion
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -69,15 +80,14 @@ class _InscriptionState extends State<Inscription> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF9754E), // Couleur du bouton
+                    backgroundColor: Color(0xFFF9754E),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                     minimumSize: const Size(30, 30),
                   ),
                   child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                     child: Text(
                       'Aller à la page de connexion',
                       style: TextStyle(color: Colors.white, fontSize: 10),
@@ -122,11 +132,27 @@ class _InscriptionState extends State<Inscription> {
                 textAlign: TextAlign.start,
               ),
               const SizedBox(height: 20),
+              
+              // CircularAvatar pour prévisualiser l'image
+              Center(
+                child: GestureDetector(
+                  onTap: pickImageFromGallery,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: _image != null ? FileImage(_image!) : null,
+                    child: _image == null
+                        ? Icon(Icons.camera_alt, size: 50, color: Colors.white)
+                        : null,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
               TextField(
                 controller: Nom,
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 8.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                   labelText: 'Nom',
                   prefixIcon: const Icon(Icons.person),
                   border: OutlineInputBorder(
@@ -140,8 +166,7 @@ class _InscriptionState extends State<Inscription> {
               TextField(
                 controller: Prenom,
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 8.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                   labelText: 'Prénom',
                   prefixIcon: const Icon(Icons.person),
                   border: OutlineInputBorder(
@@ -163,8 +188,7 @@ class _InscriptionState extends State<Inscription> {
                   });
                 },
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 8.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                   labelText: 'Email',
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(
@@ -180,8 +204,7 @@ class _InscriptionState extends State<Inscription> {
                 controller: Mdp,
                 obscureText: _obscureText,
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 8.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                   labelText: 'Mot de Passe',
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
@@ -208,26 +231,35 @@ class _InscriptionState extends State<Inscription> {
                   onPressed: () {
                     String email = Email.text.trim();
 
-                    if (emailError.isEmpty && email.isNotEmpty) {
-                      AuthService()
-                          .signUp(
-                        Email.text,
-                        Mdp.text,
-                        Nom.text,
-                        Prenom.text,
-                      )
-                          .then((result) {
-                        // Appel du popup si l'inscription est réussie
-                        if (result != null) {
-                          showSuccessPopup(context);
-                        }
-                      });
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text("Veuillez entrer un email valide.")),
-                      );
-                    }
+                    if (emailError.isEmpty && email.isNotEmpty && _image != null) {
+  // Upload the image and get the URL
+  _storageService.uploadImage(_image!, Nom.text).then((imageUrl) {
+    if (imageUrl != null) {
+      AuthService()
+          .signUp(
+        Email.text,
+        Mdp.text,
+        Nom.text,
+        Prenom.text,
+        imageUrl, // Pass the imageUrl to signUp
+      )
+      .then((result) {
+        // Call the popup if the registration is successful
+        if (result != null) {
+          showSuccessPopup(context);
+        }
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Échec de l'upload de l'image.")),
+      );
+    }
+  });
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text("Veuillez entrer un email valide et sélectionner une image.")),
+  );
+}
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF183E62),
@@ -253,6 +285,7 @@ class _InscriptionState extends State<Inscription> {
                         MaterialPageRoute(builder: (context) => Login()),
                       );
                     },
+                    
                     child: const Text(
                       "Se Connecter",
                       style: TextStyle(

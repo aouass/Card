@@ -153,7 +153,7 @@ class _AcceuilUserState extends State<AcceuilUser> {
                                       : (profileImageUrl != null &&
                                                   profileImageUrl.isNotEmpty
                                               ? NetworkImage(profileImageUrl)
-                                              : AssetImage('image/Ellipse.png'))
+                                              : AssetImage('image/profil.jpg'))
                                           as ImageProvider,
                                 ),
                               ),
@@ -196,254 +196,256 @@ class _AcceuilUserState extends State<AcceuilUser> {
                               topRight: Radius.circular(30))),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 12,
-                            ),
-
-                            //Image d'acceuil
-                            Container(
-                              height: 170,
-                              width: 350,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: const DecorationImage(
-                                  image: AssetImage('image/Rectangle.png'),
-                                  fit: BoxFit.cover, // Ajustement de l'image
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                height: 12,
+                              ),
+                          
+                              //Image d'acceuil
+                              Container(
+                                height: 170,
+                                width: 350,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  image: const DecorationImage(
+                                    image: AssetImage('image/Rectangle.png'),
+                                    fit: BoxFit.cover, // Ajustement de l'image
+                                  ),
                                 ),
                               ),
-                            ),
-
-                            SizedBox(height: 34),
-
-                            Row(
-                              children: [
-                                Container(
-                                  height: 105,
-                                  width: 154,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset:
-                                            Offset(0, 6), // changes position
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CarteScannee()),
-                                          );
-                                        },
-                                        icon: Icon(Icons.document_scanner),
-                                        color: Color(0xFFF9754E),
-                                        iconSize: 30,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const Text(
-                                        "Scanner votre ",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
+                          
+                              SizedBox(height: 34),
+                          
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 105,
+                                    width: 154,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          spreadRadius: 0,
+                                          blurRadius: 4,
+                                          offset:
+                                              Offset(0, 6), // changes position
                                         ),
-                                      ),
-                                      const Text(
-                                        "carte de visite",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      height: 105,
-                                      width: 154,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.3),
-                                            spreadRadius: 0,
-                                            blurRadius: 4,
-                                            offset: Offset(
-                                                0, 6), // changes position
-                                          ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Domaine()),
-                                              );
-                                            },
-                                            icon: Icon(Icons
-                                                .domain_verification_rounded),
-                                            color: Color(0xFFF9754E),
-                                            iconSize: 30,
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          const Text(
-                                            "Domaine",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 34),
-
-                            Row(
-                              children: [
-                                Container(
-                                  height: 105,
-                                  width: 154,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset:
-                                            Offset(0, 6), // changes position
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    children: [
+                                    child: Column(
+                                      children: [
                                         IconButton(
                                           onPressed: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      CategorieUser()),
+                                                      CarteScannee()),
                                             );
                                           },
-                                          icon: Icon(Icons.category_outlined),
+                                          icon: Icon(Icons.document_scanner),
                                           color: Color(0xFFF9754E),
-                                          iconSize: 40,
+                                          iconSize: 30,
                                         ),
-                                      
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                          "Catégorie",
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        const Text(
+                                          "Scanner votre ",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 12,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      height: 105,
-                                      width: 154,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.3),
-                                            spreadRadius: 0,
-                                            blurRadius: 4,
-                                            offset: Offset(
-                                                0, 6), // changes position
+                                        const Text(
+                                          "carte de visite",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          IconButton(
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        height: 105,
+                                        width: 154,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              spreadRadius: 0,
+                                              blurRadius: 4,
+                                              offset: Offset(
+                                                  0, 6), // changes position
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            IconButton(
                                               onPressed: () {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ContactUser()),
+                                                          Domaine()),
                                                 );
                                               },
-                                              icon: Icon(
-                                                  Icons.contact_page_outlined),
+                                              icon: Icon(Icons
+                                                  .domain_verification_rounded),
                                               color: Color(0xFFF9754E),
-                                              iconSize: 40,
+                                              iconSize: 30,
                                             ),
-                                          
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          
-                                            Text(
-                                              "Contacts",
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            const Text(
+                                              "Domaine",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                         
-                                        ],
+                                          ],
+                                        ),
                                       ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 34),
+                          
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 105,
+                                    width: 154,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          spreadRadius: 0,
+                                          blurRadius: 4,
+                                          offset:
+                                              Offset(0, 6), // changes position
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
+                                    child: Column(
+                                      children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CategorieUser()),
+                                              );
+                                            },
+                                            icon: Icon(Icons.category_outlined),
+                                            color: Color(0xFFF9754E),
+                                            iconSize: 40,
+                                          ),
+                                        
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                            "Catégorie",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        height: 105,
+                                        width: 154,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              spreadRadius: 0,
+                                              blurRadius: 4,
+                                              offset: Offset(
+                                                  0, 6), // changes position
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ContactUser()),
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                    Icons.contact_page_outlined),
+                                                color: Color(0xFFF9754E),
+                                                iconSize: 40,
+                                              ),
+                                            
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            
+                                              Text(
+                                                "Contacts",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                           
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ))

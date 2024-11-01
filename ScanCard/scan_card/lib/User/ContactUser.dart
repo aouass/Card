@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:scan_card/User/ContactCarte.dart';
+import 'package:scan_card/User/navigation_bar.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ContactUser extends StatefulWidget {
@@ -100,7 +101,7 @@ class _ContactUserState extends State<ContactUser> {
                               CircleAvatar(
                                 radius: 35,
                                 backgroundImage:
-                                    AssetImage('image/Ellipse.png'),
+                                    AssetImage('image/profil.jpg'),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8, right: 8),
@@ -146,29 +147,47 @@ class _ContactUserState extends State<ContactUser> {
                               const SizedBox(height: 12),
                               Row(
                                 children: [
-                                  Expanded(
-                                    child: TextField(
-                                      onChanged: (value) =>
-                                          searchContacts(value),
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.only(
-                                            left: 1, right: 1),
-                                        prefixIcon: const Icon(Icons.search),
-                                        hintText: "Recherche Contact",
-                                        hintStyle: const TextStyle(
-                                            color: Color(0xFF000000)),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          borderSide: const BorderSide(
-                                              color: Color(0xFF2C2C2C)),
-                                        ),
-                                        filled: true,
-                                        fillColor: const Color.fromARGB(
-                                            243, 243, 243, 243),
+                                  
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MyNavigationBar()),
+                                          );
+                                        },
+                                        icon: Icon(
+                                            Icons.arrow_back_ios_new_rounded),
+                                        iconSize: 30,
+                                        color: Color(0xFFF9754E),
                                       ),
-                                    ),
-                                  ),
+                                      Expanded(
+                                        child: TextField(
+                                          onChanged: (value) =>
+                                              searchContacts(value),
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                const EdgeInsets.only(
+                                                    left: 1, right: 1),
+                                            prefixIcon:
+                                                const Icon(Icons.search),
+                                            hintText: "Recherche Contact",
+                                            hintStyle: const TextStyle(
+                                                color: Color(0xFF000000)),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                              borderSide: const BorderSide(
+                                                  color: Color(0xFF2C2C2C)),
+                                            ),
+                                            filled: true,
+                                            fillColor: const Color.fromARGB(
+                                                243, 243, 243, 243),
+                                          ),
+                                        ),
+                                      ),
+                                   
                                   const SizedBox(width: 20),
                                   Column(
                                     children: [
@@ -247,22 +266,22 @@ class _ContactUserState extends State<ContactUser> {
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Color(0xFFF9754E),
+                                                          color:
+                                                              Color(0xFFF9754E),
                                                         ),
                                                       ),
-                                                      const SizedBox(
-                                                          height: 5),
-                                                      Text(contact['personnel'] ??
+                                                      const SizedBox(height: 5),
+                                                      Text(
+                                                        contact['personnel'] ??
                                                             'Personnel',
-                                                            style: const TextStyle(
+                                                        style: const TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.white,
                                                         ),
-                                                            ),
-                                                      const SizedBox(
-                                                          height: 5),
+                                                      ),
+                                                      const SizedBox(height: 5),
                                                       Text(
                                                         contact['email'] ??
                                                             'Email',

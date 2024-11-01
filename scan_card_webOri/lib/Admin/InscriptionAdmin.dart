@@ -71,13 +71,15 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                     minimumSize: const Size(30, 30),
                   ),
                   child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                     child: Text(
                       'Aller à la page de connexion',
                       style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                   ),
                 ),
+                
               ],
             ),
           ),
@@ -98,7 +100,6 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
               fit: BoxFit.cover,
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(top: 50, left: 30),
             child: Center(
@@ -120,9 +121,7 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
-
           Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 15),
@@ -157,12 +156,14 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                         child: TextField(
                           controller: Nom,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
                             labelText: 'Nom',
                             prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(color: Color(0xFF2C2C2C))),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF2C2C2C))),
                             filled: true,
                             fillColor: Color(0xFFFFFFFF),
                           ),
@@ -175,12 +176,14 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                         child: TextField(
                           controller: Prenom,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
                             labelText: 'Prenom',
                             prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(color: Color(0xFF2C2C2C))),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF2C2C2C))),
                             filled: true,
                             fillColor: Color(0xFFFFFFFF),
                           ),
@@ -202,12 +205,14 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                             });
                           },
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
                             labelText: 'Email',
                             prefixIcon: Icon(Icons.email),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(color: Color(0xFF2C2C2C))),
+                                borderSide:
+                                    BorderSide(color: Color(0xFF2C2C2C))),
                             filled: true,
                             fillColor: Color(0xFFFFFFFF),
                             errorText: emailError.isEmpty ? null : emailError,
@@ -222,12 +227,15 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                           controller: Mdp,
                           obscureText: _obscureText,
                           decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 8.0),
                               labelText: 'Mot de Passe',
                               prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureText ? Icons.visibility : Icons.visibility_off,
+                                  _obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -237,7 +245,8 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(color: Color(0xFF2C2C2C))),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF2C2C2C))),
                               filled: true,
                               fillColor: Colors.white),
                         ),
@@ -248,34 +257,44 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                       ElevatedButton(
                         onPressed: () {
                           String email = Email.text.trim();
-                          print('Tentative d\'inscription avec l\'email: $email');
+                          print(
+                              'Tentative d\'inscription avec l\'email: $email');
 
                           if (emailError.isEmpty && email.isNotEmpty) {
-                            AuthServiceAdmin().signUpAdmin(
+                            AuthServiceAdmin()
+                                .signUpAdmin(
                               Email.text,
                               Mdp.text,
                               Nom.text,
                               Prenom.text,
-                            ).then((result) {
+                            )
+                                .then((result) {
                               if (result != null) {
-                                print('Inscription réussie pour l\'email: $email');
+                                print(
+                                    'Inscription réussie pour l\'email: $email');
                                 showSuccessPopup(context);
                               } else {
-                                print('Inscription échouée pour l\'email: $email');
+                                print(
+                                    'Inscription échouée pour l\'email: $email');
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("L'inscription a échoué.")),
+                                  SnackBar(
+                                      content: Text("L'inscription a échoué.")),
                                 );
                               }
                             }).catchError((error) {
                               print('Erreur lors de l\'inscription: $error');
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Une erreur est survenue. Veuillez réessayer.")),
+                                SnackBar(
+                                    content: Text(
+                                        "Une erreur est survenue. Veuillez réessayer.")),
                               );
                             });
                           } else {
                             print('Email invalide ou vide: $email');
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Veuillez entrer un email valide.")),
+                              SnackBar(
+                                  content:
+                                      Text("Veuillez entrer un email valide.")),
                             );
                           }
                         },
@@ -286,6 +305,40 @@ class _InscriptionAdminState extends State<InscriptionAdmin> {
                           "S'inscrire",
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
+                      ),
+
+                      const SizedBox(height: 6),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Vous n'avez pas de compte ? ",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                            // textAlign: TextAlign.center,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Navigue vers la page de connexion
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        LoginAdmin()), // Remplace par la page de connexion appropriée
+                              );
+                            },
+                            child: const Text(
+                              "Se connecter",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 85, 92, 99),
+                                decoration: TextDecoration.underline,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ]),
                   ),

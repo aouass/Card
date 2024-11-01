@@ -35,28 +35,35 @@ class _ContactUserState extends State<ContactUser> {
 
   @override
   void initState() {
-    super.initState();
-    // Initialiser le stream des contacts
-    contactStream =
-        FirebaseFirestore.instance.collection('contacts').snapshots();
+  super.initState();
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    // Initialiser le stream des contacts pour l'utilisateur connecté uniquement
+    contactStream = FirebaseFirestore.instance
+        .collection('contacts')
+        .where('userId', isEqualTo: user.uid) // Filtrer par UID
+        .snapshots();
   }
+}
+// Fonction pour rechercher les contacts de l'utilisateur connecté
+// void searchContacts(String query) {
+//   setState(() {
+//     searchQuery = query;
+//     if (query.isNotEmpty) {
+//       // Filtrer les contacts par catégorie lorsqu'il y a une saisie
+//       contactStream = FirebaseFirestore.instance
+//           .collection('contacts')
+//           .where('categorie', isGreaterThanOrEqualTo: query)
+//           .where('categorie', isLessThanOrEqualTo: query + '\uf8ff')
+//           .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+//           .snapshots();
+//     } else {
+//       // Si la barre de recherche est vide, ne pas afficher de contacts
+//       contactStream = Stream.empty();
+//     }
+//   });
+// }
 
-  // Fonction pour rechercher les contacts
-  void searchContacts(String query) {
-    setState(() {
-      searchQuery = query;
-      if (query.isNotEmpty) {
-        contactStream = FirebaseFirestore.instance
-            .collection('contacts')
-            .where('categorie', isGreaterThanOrEqualTo: query)
-            .where('categorie', isLessThanOrEqualTo: query + '\uf8ff')
-            .snapshots();
-      } else {
-        contactStream =
-            FirebaseFirestore.instance.collection('contacts').snapshots();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +171,8 @@ class _ContactUserState extends State<ContactUser> {
                                       ),
                                       Expanded(
                                         child: TextField(
-                                          onChanged: (value) =>
-                                              searchContacts(value),
+                                          // onChanged: (value) =>
+                                          //     searchContacts(value),
                                           decoration: InputDecoration(
                                             contentPadding:
                                                 const EdgeInsets.only(

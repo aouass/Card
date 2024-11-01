@@ -1,17 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OrganisationPage extends StatelessWidget {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Future<List<Map<String, dynamic>>> _getOrganisationContactsAndCards() async {
     List<Map<String, dynamic>> items = [];
 
     QuerySnapshot contactsSnapshot = await FirebaseFirestore.instance
         .collection('contacts')
         .where('categorie', isEqualTo: 'Organisation')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
     QuerySnapshot cardsSnapshot = await FirebaseFirestore.instance
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Organisation')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     items.addAll(contactsSnapshot.docs
@@ -59,6 +63,7 @@ class OrganisationPage extends StatelessWidget {
 }
 
 class EntreprisePage extends StatelessWidget {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Future<List<Map<String, dynamic>>> _getEntreprisePageContactsAndCards() async {
     List<Map<String, dynamic>> items = [];
 
@@ -116,16 +121,19 @@ class EntreprisePage extends StatelessWidget {
 }
 
 class FreelancePage extends StatelessWidget {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Future<List<Map<String, dynamic>>> _getFreelancePageContactsAndCards() async {
     List<Map<String, dynamic>> items = [];
 
     QuerySnapshot contactsSnapshot = await FirebaseFirestore.instance
         .collection('contacts')
         .where('categorie', isEqualTo: 'Freelance')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
     QuerySnapshot cardsSnapshot = await FirebaseFirestore.instance
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Freelance')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     items.addAll(contactsSnapshot.docs
@@ -173,6 +181,7 @@ class FreelancePage extends StatelessWidget {
 }
 
 class ProfessionnelPage extends StatelessWidget {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Future<List<Map<String, dynamic>>>
       _getProfessionnelPageContactsAndCards() async {
     List<Map<String, dynamic>> items = [];
@@ -180,10 +189,12 @@ class ProfessionnelPage extends StatelessWidget {
     QuerySnapshot contactsSnapshot = await FirebaseFirestore.instance
         .collection('contacts')
         .where('categorie', isEqualTo: 'Professionnel')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
     QuerySnapshot cardsSnapshot = await FirebaseFirestore.instance
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Professionnel')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     items.addAll(contactsSnapshot.docs
@@ -231,16 +242,19 @@ class ProfessionnelPage extends StatelessWidget {
 }
 
 class colleguePage extends StatelessWidget {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Future<List<Map<String, dynamic>>> _getColleguePageContactsAndCards() async {
     List<Map<String, dynamic>> items = [];
 
     QuerySnapshot contactsSnapshot = await FirebaseFirestore.instance
         .collection('contacts')
         .where('categorie', isEqualTo: 'Collegue')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
     QuerySnapshot cardsSnapshot = await FirebaseFirestore.instance
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Collegue')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     items.addAll(contactsSnapshot.docs

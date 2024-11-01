@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/generated/l10n.dart'; // Import des traductions
 
@@ -27,10 +29,20 @@ class LanguageSelectionPage extends StatelessWidget {
       ),
     );
   }
+void _changeLanguage(BuildContext context, Locale locale) async {
+  // Met à jour la locale dans l'application
+  S.load(locale);
+  
+  // Récupérer l'ID de l'utilisateur connecté
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
-  void _changeLanguage(BuildContext context, Locale locale) {
-    // Met à jour la locale dans l'application
-    S.load(locale);
-    Navigator.of(context).pop(); // Retourne à la page précédente
-  }
+  // Mettre à jour la langue dans Firestore pour l'utilisateur connecté
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .update({'language': locale.languageCode});
+
+  Navigator.of(context).pop(); // Retourne à la page précédente
+}
+
 }

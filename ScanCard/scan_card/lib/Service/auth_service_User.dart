@@ -7,6 +7,8 @@ import 'package:scan_card/User/navigation_bar.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  // Getter pour obtenir l'utilisateur actuellement connecté
+  User? get currentUser => _auth.currentUser;
   // Déclaration des contrôleurs pour les champs de texte
   // final TextEditingController Nom = TextEditingController();
   // final TextEditingController Prenom = TextEditingController();
@@ -88,14 +90,7 @@ class AuthService {
     return userDoc.data() as Map<String, dynamic>;
   }
 
-  // // Déconnexion utilisateur
-  // Future<void> _logout(BuildContext context) async {
-  //   await FirebaseAuth.instance.signOut();
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => Login()),
-  //   );
-  // }
+
 
   // Déconnexion utilisateur
   Future<void> signOut(BuildContext context) async {

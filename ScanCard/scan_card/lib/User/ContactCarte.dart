@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/Service/Contact_service.dart';
 import 'package:scan_card/User/navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ContactCarte extends StatefulWidget {
   @override
@@ -64,34 +65,42 @@ class _ContactCarteState extends State<ContactCarte> {
   }
 
   void _saveContact() async {
-    // Génère un nouvel ID unique pour le contact
-    String contactId =
-        FirebaseFirestore.instance.collection('contacts').doc().id;
-
-    final contactData = {
-      'nom': _nomController.text,
-      'prenom': _prenomController.text,
-      'personnel': _personnelController.text,
-      'profession': _professionController.text,
-      'email': _emailController.text,
-      'entreprise': _entrepriseController.text,
-      'adresse': _adresseController.text,
-      'categorie': _selectedCategorie ?? '',
-      'domaine': _domaineController.text,
-      'note': _noteController.text,
-    };
-
-    // Appel au service pour sauvegarder ou mettre à jour les données
     try {
-      await _contactService.addOrUpdateContact(contactId, contactData);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Contact enregistré avec succès'),
-      ));
-      // Réinitialiser les champs après l'enregistrement
-      _resetFields();
+      // Récupération de l'ID de l'utilisateur connecté
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String userId = user.uid;
+
+        // Génère un nouvel ID unique pour le contact
+        String contactId = FirebaseFirestore.instance.collection('contacts').doc().id;
+
+        final contactData = {
+          'nom': _nomController.text,
+          'prenom': _prenomController.text,
+          'personnel': _personnelController.text,
+          'profession': _professionController.text,
+          'email': _emailController.text,
+          'entreprise': _entrepriseController.text,
+          'adresse': _adresseController.text,
+          'categorie': _selectedCategorie ?? '',
+          'domaine': _domaineController.text,
+          'note': _noteController.text,
+          'userId': userId, // Ajout de l'ID utilisateur
+        };
+
+        await _contactService.addOrUpdateContact(contactId, contactData);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Contact enregistré avec succès'),
+        ));
+        _resetFields();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Erreur : utilisateur non connecté"),
+        ));
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Erreur lors de l\'enregistrement du contact'),
+        content: Text("Erreur lors de l'enregistrement du contact"),
       ));
     }
   }

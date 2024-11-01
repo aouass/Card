@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/Service/Scan_service.dart';
 import 'package:scan_card/User/navigation_bar.dart'; // Assure-toi que ton service ScanService est importé
@@ -27,6 +28,7 @@ class _CarteScanneeState extends State<CarteScannee> {
   final TextEditingController _noteController = TextEditingController();
 
   final ScanService _scanService = ScanService();
+  String? _userId; // ID de l'utilisateur connecté
 
   String? _selectedCategorie;
   final List<String> _categories = [
@@ -54,6 +56,19 @@ class _CarteScanneeState extends State<CarteScannee> {
   // Liste des champs dynamiques
   List<Widget> _additionalFields = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserId();
+  }
+
+  void _fetchUserId() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userId = user.uid; // Récupère l'ID de l'utilisateur connecté
+    }
+  }
+
   void _addField() {
     setState(() {
       _additionalFields.add(_buildDynamicField());
@@ -66,12 +81,19 @@ class _CarteScanneeState extends State<CarteScannee> {
     });
   }
 
-  void _saveScan() async {
-    // Génère un nouvel ID unique pour la carte scannee
-    String ScanId =
+   void _saveScan() async {
+    if (_userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Impossible d'enregistrer. Utilisateur non connecté."),
+      ));
+      return;
+    }
+
+    String scanId =
         FirebaseFirestore.instance.collection('CarteScannee').doc().id;
 
     final scanData = {
+      'userId': _userId, // Ajoute l'ID de l'utilisateur connecté
       'nom': _nomController.text,
       'prenom': _prenomController.text,
       'personnel': _personnelController.text,
@@ -84,13 +106,11 @@ class _CarteScanneeState extends State<CarteScannee> {
       'note': _noteController.text,
     };
 
-    // Appel au service pour sauvegarder ou mettre à jour les données
     try {
-      await _scanService.addOrUpdateScan(ScanId, scanData);
+      await _scanService.addOrUpdateScan(scanId, scanData);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('CarteScnanne enregistré avec succès'),
+        content: Text('CarteScannee enregistrée avec succès'),
       ));
-      // Réinitialiser les champs après l'enregistrement
       _resetFields();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

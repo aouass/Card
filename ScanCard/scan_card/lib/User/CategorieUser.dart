@@ -1,81 +1,94 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/User/CategoriesP.dart';
 import 'package:scan_card/User/navigation_bar.dart';
 
 class CategorieUser extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
 //fonction pour le nombre total Organisation
-  Future<int> _getOrganisationCount() async {
-    QuerySnapshot contacts = await firestore
-        .collection('contacts')
-        .where('categorie', isEqualTo: 'Organisation')
-        .get();
+  Future<int> _getOrganisationCount(String userId) async {
+  QuerySnapshot contacts = await firestore
+      .collection('contacts')
+      .where('categorie', isEqualTo: 'Organisation')
+      .where('userId', isEqualTo: userId) // Filtrer par userId
+      .get();
 
-    QuerySnapshot cartes = await firestore
-        .collection('CarteScannee')
-        .where('categorie', isEqualTo: 'Organisation')
-        .get();
+  QuerySnapshot cartes = await firestore
+      .collection('CarteScannee')
+      .where('categorie', isEqualTo: 'Organisation')
+      .where('userId', isEqualTo: userId) // Filtrer par userId
+      .get();
 
-    return contacts.size + cartes.size;
-  }
+  return contacts.size + cartes.size;
+}
+
 
 //fonction pour le nombre total Entreprise
-  Future<int> _getEntrepriseCount() async {
+  Future<int> _getEntrepriseCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('categorie', isEqualTo: 'Entreprise')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Entreprise')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Freelance
-  Future<int> _getFreelanceCount() async {
+  Future<int> _getFreelanceCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('categorie', isEqualTo: 'Freelance')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Freelance')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Professionnel
-  Future<int> _getProfessionnelCount() async {
+  Future<int> _getProfessionnelCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('categorie', isEqualTo: 'Professionnel')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Professionnel')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Collegue
-  Future<int> _getCollegueCount() async {
+  Future<int> _getCollegueCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('categorie', isEqualTo: 'Collegue')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('categorie', isEqualTo: 'Collegue')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
@@ -130,7 +143,7 @@ class CategorieUser extends StatelessWidget {
                   ])),
               const SizedBox(height: 60),
               FutureBuilder<int>(
-                future: _getOrganisationCount(),
+                future: _getOrganisationCount(userId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // Loading state
@@ -202,7 +215,7 @@ class CategorieUser extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               FutureBuilder<int>(
-                future: _getEntrepriseCount(),
+                future: _getEntrepriseCount(userId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // Loading state
@@ -274,7 +287,7 @@ class CategorieUser extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               FutureBuilder<int>(
-                future: _getFreelanceCount(),
+                future: _getFreelanceCount(userId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // Loading state
@@ -346,7 +359,7 @@ class CategorieUser extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               FutureBuilder<int>(
-                future: _getProfessionnelCount(),
+                future: _getProfessionnelCount(userId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // Loading state
@@ -418,7 +431,7 @@ class CategorieUser extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               FutureBuilder<int>(
-                future: _getCollegueCount(),
+                future: _getCollegueCount(userId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // Loading state

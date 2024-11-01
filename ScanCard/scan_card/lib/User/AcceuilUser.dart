@@ -23,41 +23,21 @@ class _AcceuilUserState extends State<AcceuilUser> {
   String? _imageUrl; // Stocker l'URL de l'image
 
   Future<Map<String, dynamic>> _getUserData() async {
-    File? _imageFile;
     User? user = FirebaseAuth.instance.currentUser;
+
     if (user == null) {
       return {};
     }
 
     DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('users')
-        .doc(user.uid)
+        .doc(user.uid)  // Utilisation de l'UID de l'utilisateur connecté
         .get();
 
     return userDoc.data() as Map<String, dynamic>;
   }
 
   final ImagePicker _picker = ImagePicker();
-  Future<File?> pickImage() async {
-    final pickedImage = await _picker.pickImage(source: ImageSource.camera);
-    if (pickedImage != null) {
-      _imageBytes = await pickedImage.readAsBytes();
-
-      _applyOCR(_imageBytes);
-
-      return File(pickedImage.path);
-    }
-    return null;
-  }
-
-  Future<void> _applyOCR(dynamic image) async {
-    final inputImage = InputImage.fromFile(image);
-    final textRecognizer = TextRecognizer();
-    final RecognizedText recognizedText =
-        await textRecognizer.processImage(inputImage);
-
-    textRecognizer.close();
-  }
 
   Future<void> pickImageFromGallery() async {
     final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -65,8 +45,6 @@ class _AcceuilUserState extends State<AcceuilUser> {
       setState(() {
         _imageFile = File(pickedImage.path);
       });
-
-      // Upload de l'image vers Firebase Storage
       await _uploadImageToFirebase();
     }
   }
@@ -77,14 +55,10 @@ class _AcceuilUserState extends State<AcceuilUser> {
       String filePath = 'profile_images/${user.uid}.jpg';
 
       try {
-        // Téléchargement de l'image dans Firebase Storage
         TaskSnapshot snapshot =
             await FirebaseStorage.instance.ref(filePath).putFile(_imageFile!);
-
-        // Récupérer l'URL de l'image
         String downloadUrl = await snapshot.ref.getDownloadURL();
 
-        // Mettre à jour l'URL de l'image dans Firestore
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -120,10 +94,8 @@ class _AcceuilUserState extends State<AcceuilUser> {
               }
 
               var userData = snapshot.data!;
-              String role = userData['role'] ?? 'Rôle inconnu';
               String nom = userData['nom'] ?? 'Nom inconnu';
               String prenom = userData['prenom'] ?? 'Prenom inconnu';
-              // Assurez-vous que 'profileImageUrl' est bien récupéré depuis les données
               String? profileImageUrl = userData['profileImageUrl'];
 
               return Container(
@@ -133,9 +105,7 @@ class _AcceuilUserState extends State<AcceuilUser> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    const SizedBox(height: 30),
                     Padding(
                       padding: EdgeInsets.only(left: 85, right: 80, top: 20),
                       child: Row(
@@ -150,28 +120,19 @@ class _AcceuilUserState extends State<AcceuilUser> {
                                   radius: 35,
                                   backgroundImage: _imageUrl != null
                                       ? NetworkImage(_imageUrl!)
-                                      : (profileImageUrl != null &&
-                                                  profileImageUrl.isNotEmpty
-                                              ? NetworkImage(profileImageUrl)
-                                              : AssetImage('image/profil.jpg'))
-                                          as ImageProvider,
+                                      : (profileImageUrl != null && profileImageUrl.isNotEmpty
+                                          ? NetworkImage(profileImageUrl)
+                                          : AssetImage('image/profil.jpg') as ImageProvider),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8, right: 8),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Salut ,$prenom $nom ", //$nom  $prenom
-                                      style: const TextStyle(
-                                        color: Color(0xFFFFFFFF),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  "Salut, $prenom $nom",
+                                  style: const TextStyle(
+                                    color: Color(0xFFFFFFFF),
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ],
@@ -179,353 +140,137 @@ class _AcceuilUserState extends State<AcceuilUser> {
                         ],
                       ),
                     ),
-
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    //bloc du milieu
+                    SizedBox(height: 10),
                     Expanded(
-                        child: Container(
-                      height: 200,
-                      width: 500,
-                      decoration: const BoxDecoration(
+                      child: Container(
+                        height: 200,
+                        width: 500,
+                        decoration: const BoxDecoration(
                           color: Color(0xFFFFFFFF),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30),
                               topRight: Radius.circular(30))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                height: 12,
-                              ),
-                          
-                              //Image d'acceuil
-                              Container(
-                                height: 170,
-                                width: 350,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  image: const DecorationImage(
-                                    image: AssetImage('image/Rectangle.png'),
-                                    fit: BoxFit.cover, // Ajustement de l'image
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 12),
+                                Container(
+                                  height: 170,
+                                  width: 350,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    image: const DecorationImage(
+                                      image: AssetImage('image/Rectangle.png'),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          
-                              SizedBox(height: 34),
-                          
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 105,
-                                    width: 154,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.3),
-                                          spreadRadius: 0,
-                                          blurRadius: 4,
-                                          offset:
-                                              Offset(0, 6), // changes position
-                                        ),
-                                      ],
+                                SizedBox(height: 34),
+                                Row(
+                                  children: [
+                                    _buildActionButton(
+                                      context,
+                                      "Scanner votre carte de visite",
+                                      Icons.document_scanner,
+                                      () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => CarteScannee()),
+                                        );
+                                      },
                                     ),
-                                    child: Column(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CarteScannee()),
-                                            );
-                                          },
-                                          icon: Icon(Icons.document_scanner),
-                                          color: Color(0xFFF9754E),
-                                          iconSize: 30,
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        const Text(
-                                          "Scanner votre ",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const Text(
-                                          "carte de visite",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                    const SizedBox(width: 12),
+                                    _buildActionButton(
+                                      context,
+                                      "Domaine",
+                                      Icons.domain_verification_rounded,
+                                      () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => Domaine()),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 12,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        height: 105,
-                                        width: 154,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(20),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.3),
-                                              spreadRadius: 0,
-                                              blurRadius: 4,
-                                              offset: Offset(
-                                                  0, 6), // changes position
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Domaine()),
-                                                );
-                                              },
-                                              icon: Icon(Icons
-                                                  .domain_verification_rounded),
-                                              color: Color(0xFFF9754E),
-                                              iconSize: 30,
-                                            ),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            const Text(
-                                              "Domaine",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 34),
-                          
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 105,
-                                    width: 154,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.3),
-                                          spreadRadius: 0,
-                                          blurRadius: 4,
-                                          offset:
-                                              Offset(0, 6), // changes position
-                                        ),
-                                      ],
+                                  ],
+                                ),
+                                SizedBox(height: 34),
+                                Row(
+                                  children: [
+                                    _buildActionButton(
+                                      context,
+                                      "Catégorie",
+                                      Icons.category_outlined,
+                                      () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => CategorieUser()),
+                                        );
+                                      },
                                     ),
-                                    child: Column(
-                                      children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CategorieUser()),
-                                              );
-                                            },
-                                            icon: Icon(Icons.category_outlined),
-                                            color: Color(0xFFF9754E),
-                                            iconSize: 40,
-                                          ),
-                                        
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                            "Catégorie",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        
-                                      ],
+                                    const SizedBox(width: 12),
+                                    _buildActionButton(
+                                      context,
+                                      "Contacts",
+                                      Icons.contact_page_outlined,
+                                      () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => ContactUser()),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 12,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        height: 105,
-                                        width: 154,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(20),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.3),
-                                              spreadRadius: 0,
-                                              blurRadius: 4,
-                                              offset: Offset(
-                                                  0, 6), // changes position
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ContactUser()),
-                                                  );
-                                                },
-                                                icon: Icon(
-                                                    Icons.contact_page_outlined),
-                                                color: Color(0xFFF9754E),
-                                                iconSize: 40,
-                                              ),
-                                            
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            
-                                              Text(
-                                                "Contacts",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                           
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ))
+                    )
                   ],
                 ),
               );
             }));
   }
+
+  Widget _buildActionButton(BuildContext context, String title, IconData icon, VoidCallback onPressed) {
+    return Container(
+      height: 105,
+      width: 154,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            spreadRadius: 0,
+            blurRadius: 4,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          IconButton(
+            onPressed: onPressed,
+            icon: Icon(icon),
+            color: Color(0xFFF9754E),
+            iconSize: 30,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
-
-// const SizedBox(
-//     height: 20,
-//   ),
-
-// Column(
-//   children: [
-//     Container(
-//       height: 100,
-//       width: 370,
-//       decoration: BoxDecoration(
-//         color: Color(0xFF000000).withOpacity(0.2),
-//         borderRadius: BorderRadius.circular(20),
-//       ),
-
-//       // child: Row(
-//       //   crossAxisAlignment: CrossAxisAlignment.center,
-//       //   children: [
-//       //     const SizedBox(
-//       //       width: 15,
-//       //     ),
-//       //     // L'image à gauche
-//       //     ClipRRect(
-//       //       borderRadius: BorderRadius.circular(10),
-//       //       child: Container(
-//       //         width: 130, // Largeur de l'image
-//       //         height: 60, // Hauteur de l'image
-//       //         color: Colors.white, // Fond blanc
-//       //       ),
-//       //     ),
-//       //     const SizedBox(
-//       //         width:
-//       //             20), // Espacement entre l'image et les textes
-//       //     // Les textes
-//       //     const Column(
-//       //       crossAxisAlignment: CrossAxisAlignment.start,
-//       //       children: [
-//       //         SizedBox(
-//       //           height: 30,
-//       //         ),
-//       //         Text(
-//       //           'Profession',
-//       //           style: TextStyle(
-//       //             fontWeight: FontWeight.bold,
-//       //             fontSize: 16,
-//       //           ),
-//       //         ),
-//       //         Text(
-//       //           'Email',
-//       //           style: TextStyle(
-//       //             fontWeight: FontWeight.normal,
-//       //             fontSize: 14,
-//       //           ),
-//       //         ),
-//       //       ],
-//       //     ),
-//       //     const SizedBox(
-//       //       width: 70,
-//       //     ),
-//       //     // L'icône circulaire à droite
-//       //     const CircleAvatar(
-//       //       backgroundColor:
-//       //           Colors.blueGrey, // Couleur de fond bleu-gris
-//       //       radius: 20,
-//       //       child: Icon(
-//       //         Icons.more_horiz, // Icône "..." dans le cercle
-//       //         color: Colors.white,
-//       //       ),
-//       //     ),
-//       //   ],
-//       // ),
-//     ),
-//   ],
-// ),

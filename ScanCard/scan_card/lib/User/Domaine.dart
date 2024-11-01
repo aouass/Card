@@ -1,141 +1,161 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/User/DomainesP.dart';
 import 'package:scan_card/User/navigation_bar.dart';
 
 class Domaine extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
 //fonction pour le nombre total Technologie
-  Future<int> _getTechnologieCount() async {
+  Future<int> _getTechnologieCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Technologie')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Technologie')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Santé
-  Future<int> _getSanteCount() async {
+  Future<int> _getSanteCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Santé')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Santé')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Marketing
-  Future<int> _getMarketingCount() async {
+  Future<int> _getMarketingCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Marketing')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Marketing')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Immobilier
-  Future<int> _getImmobilierCount() async {
+  Future<int> _getImmobilierCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Immobilier')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Immobilier')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Education
-  Future<int> _getEducationCount() async {
+  Future<int> _getEducationCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Education')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Education')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Tourisme
-  Future<int> _getTourismeCount() async {
+  Future<int> _getTourismeCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Tourisme')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Tourisme')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Energie
-  Future<int> _getEnergieCount() async {
+  Future<int> _getEnergieCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Energie')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Energie')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Environnement
-  Future<int> _getEnvironnementCount() async {
+  Future<int> _getEnvironnementCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Environnement')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Environnement')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
   }
 
 //fonction pour le nombre total Autres
-  Future<int> _getAutresCount() async {
+  Future<int> _getAutresCount(String userId) async {
     QuerySnapshot contacts = await firestore
         .collection('contacts')
         .where('domaine', isEqualTo: 'Autres')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     QuerySnapshot cartes = await firestore
         .collection('CarteScannee')
         .where('domaine', isEqualTo: 'Autres')
+        .where('userId', isEqualTo: userId) // Filtrer par userId
         .get();
 
     return contacts.size + cartes.size;
@@ -193,26 +213,11 @@ class Domaine extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: Stack(
                   children: [
-                    Container(
-                      height: 570,
-                      width: 400,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF21396A).withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 0,
-                            blurRadius: 4,
-                            offset: Offset(0, 6), // changes position
-                          ),
-                        ],
-                      ),
-                    ),
+                    
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 20),
                       child: FutureBuilder<int>(
-                        future: _getTechnologieCount(),
+                        future: _getTechnologieCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -280,7 +285,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 80),
                       child: FutureBuilder<int>(
-                        future: _getSanteCount(),
+                        future: _getSanteCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -349,7 +354,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 140),
                       child: FutureBuilder<int>(
-                        future: _getMarketingCount(),
+                        future: _getMarketingCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -419,7 +424,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 200),
                       child: FutureBuilder<int>(
-                        future: _getImmobilierCount(),
+                        future: _getImmobilierCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -489,7 +494,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 260),
                       child: FutureBuilder<int>(
-                        future: _getEducationCount(),
+                        future: _getEducationCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -559,7 +564,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 320),
                       child: FutureBuilder<int>(
-                        future: _getTourismeCount(),
+                        future: _getTourismeCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -629,7 +634,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 380),
                       child: FutureBuilder<int>(
-                        future: _getEnergieCount(),
+                        future: _getEnergieCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -699,7 +704,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 445),
                       child: FutureBuilder<int>(
-                        future: _getEnvironnementCount(),
+                        future: _getEnvironnementCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -769,7 +774,7 @@ class Domaine extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15, top: 510),
                       child: FutureBuilder<int>(
-                        future: _getAutresCount(),
+                        future: _getAutresCount(userId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

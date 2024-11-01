@@ -16,16 +16,24 @@ class ParametreUser extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 // fonction pour envoyer un email de réinitialisation de mot de passe lorsque l'utilisateur clique sur le conteneur "Réinitialiser mot de passe".
-  Future<void> _resetPassword(String email) async {
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
+  Future<void> _resetPasswordForCurrentUser() async {
+  try {
+    // Récupérer l'utilisateur actuellement connecté
+    final user = _auth.currentUser;
+    if (user != null && user.email != null) {
+      // Envoyer l'email de réinitialisation au compte connecté
+      await _auth.sendPasswordResetEmail(email: user.email!);
       // Afficher un message de succès (par exemple, un SnackBar)
-      print("Email de réinitialisation envoyé");
-    } catch (e) {
-      // Gérer les erreurs ici
-      print("Erreur lors de l'envoi de l'email de réinitialisation : $e");
+      print("Email de réinitialisation envoyé à ${user.email}");
+    } else {
+      print("Aucun utilisateur connecté ou adresse e-mail manquante");
     }
+  } catch (e) {
+    // Gérer les erreurs ici
+    print("Erreur lors de l'envoi de l'email de réinitialisation : $e");
   }
+}
+
 
   void _showEmailDialog(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
@@ -54,7 +62,7 @@ class ParametreUser extends StatelessWidget {
               onPressed: () {
                 String email = emailController.text.trim();
                 if (email.isNotEmpty) {
-                  _resetPassword(email);
+                  _resetPasswordForCurrentUser();
                   Navigator.of(context).pop(); // Ferme le dialog après l'envoi
                 } else {
                   // Gérer le cas où l'email est vide (facultatif)
@@ -74,12 +82,25 @@ class ParametreUser extends StatelessWidget {
 
   
 Future<void> _saveContactsToPhone(BuildContext context) async {
+  // Obtenez l'utilisateur connecté
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Utilisateur non connecté")),
+    );
+    return;
+  }
+
   // Demander la permission d'accéder aux contacts
   var status = await Permission.contacts.request();
   if (status.isGranted) {
     try {
-      // Récupérer les contacts de Firestore
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('contacts').get();
+      // Récupérer les contacts de l'utilisateur connecté dans Firestore
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('contacts')
+          .where('userId', isEqualTo: currentUser.uid)
+          .get();
+
       for (var doc in snapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
 
@@ -116,6 +137,7 @@ Future<void> _saveContactsToPhone(BuildContext context) async {
 }
 
 
+
   void _confirmSaveContacts(BuildContext context) {
     showDialog(
       context: context,
@@ -144,33 +166,41 @@ Future<void> _saveContactsToPhone(BuildContext context) async {
     );
   }
 
-  void _showLogoutConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Déconnexion"),
-          content: const Text("Êtes-vous sûr de vouloir vous déconnecter ?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Ferme le dialog
-              },
-              child: Text(S.of(context).no),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Ferme le dialog
-                AuthService()
-                    .signOut(context); // Appelle la méthode de déconnexion
-              },
-              child: Text(S.of(context).yes),
-            ),
-          ],
-        );
-      },
-    );
+  void _showLogoutConfirmationDialog(BuildContext context) async {
+  // Vérifie si l'utilisateur est connecté
+  final user = AuthService().currentUser;
+  if (user == null) {
+    // Si aucun utilisateur n'est connecté, ne pas afficher le dialogue
+    return;
   }
+
+  // Si un utilisateur est connecté, affiche la boîte de dialogue
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Déconnexion"),
+        content: const Text("Êtes-vous sûr de vouloir vous déconnecter ?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Ferme le dialogue
+            },
+            child: Text(S.of(context).no),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Ferme le dialogue
+              AuthService().signOut(context); // Appelle la méthode de déconnexion
+            },
+            child: Text(S.of(context).yes),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {

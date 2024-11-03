@@ -9,12 +9,7 @@ class AuthService {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   // Getter pour obtenir l'utilisateur actuellement connecté
   User? get currentUser => _auth.currentUser;
-  // Déclaration des contrôleurs pour les champs de texte
-  // final TextEditingController Nom = TextEditingController();
-  // final TextEditingController Prenom = TextEditingController();
-  // final TextEditingController Email = TextEditingController();
-  // final TextEditingController Mdp = TextEditingController();
-
+  
   // Inscription utilisateur
   Future<User?> signUp(
       String email, String password, String nom, String prenom, String imageUrl) async {
@@ -27,7 +22,8 @@ class AuthService {
         'prenom': prenom,
         'email': email,
         'role': 'utilisateur',
-        'imageUrl':  imageUrl
+        'imageUrl':  imageUrl,
+        'creationDate': FieldValue.serverTimestamp(), // Ajout de la date de création
       });
       return result.user;
     } catch (e) {

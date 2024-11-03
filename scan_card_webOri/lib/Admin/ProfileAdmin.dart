@@ -106,22 +106,28 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                   decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(10)),
-                  child: const Padding(
-                      padding: EdgeInsets.only(right: 820),
+                  child: Padding(
+                      padding: const EdgeInsets.only(right: 820),
                       child: Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
-                          CircleAvatar(
+                          const CircleAvatar(
                             backgroundImage: AssetImage(
                               "Images/Ellipse.png",
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text("Email")
+                          Flexible(
+                            child: Text(
+                              _emailController.text,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black), // Style de texte en noir (ajustable)
+                            ),
+                          ),
                         ],
                       )),
                 ),

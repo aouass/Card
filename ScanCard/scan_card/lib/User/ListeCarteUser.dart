@@ -10,9 +10,7 @@ import 'package:share_plus/share_plus.dart';
 class ListeCarteUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
-     final userId = FirebaseAuth.instance.currentUser?.uid; // Récupérer l'ID de l'utilisateur connecté
-
+    final userId = FirebaseAuth.instance.currentUser?.uid;
 
     return SafeArea(
       child: Scaffold(
@@ -50,99 +48,11 @@ class ListeCarteUser extends StatelessWidget {
               ),
               const SizedBox(height: 60),
 
-              // StreamBuilder pour récupérer les contacts de l'utilisateur
-              StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('contacts')
-                    .where('userId', isEqualTo: userId) // Filtrer par userId
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text("Aucun contact trouvé"));
-                  }
-
-                  final contacts = snapshot.data!.docs;
-
-                  return Column(
-                    children: contacts.map((contact) {
-                      return Center(
-                        child: Container(
-                          padding: EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF21396A).withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          width: 310,
-                          height: 110,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      contact['profession'] ?? 'Profession',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFFF9754E),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(contact['personnel'] ?? 'Personnel',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      contact['email'] ?? 'Email',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Bouton circulaire à droite pour afficher le popup
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundColor: const Color(0xFFF9754E),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.more_horiz,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    _showOptionsBottomSheet(context, contact);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 40),
-
               // StreamBuilder pour récupérer les cartes scannées de l'utilisateur
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('CarteScannee')
-                    .where('userId', isEqualTo: userId) // Filtrer par userId
+                    .where('userId', isEqualTo: userId)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -201,7 +111,6 @@ class ListeCarteUser extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              // Bouton circulaire à droite pour afficher le popup
                               CircleAvatar(
                                 radius: 20,
                                 backgroundColor: const Color(0xFFF9754E),
@@ -251,15 +160,15 @@ class ListeCarteUser extends StatelessWidget {
                   leading: const Icon(Icons.edit, color: Colors.blue),
                   title: const Text('Modifier'),
                   onTap: () {
-                    // Appeler la logique de modification ici
                     Navigator.pop(context);
+                    _showEditPopup(context, doc);
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.delete, color: Colors.red),
                   title: const Text('Supprimer'),
                   onTap: () {
-                     _deleteItem(context, doc, doc); // Appeler la fonction _deleteItem
+                    _deleteItem(context, doc, doc);
                   },
                 ),
                 ListTile(
@@ -287,59 +196,126 @@ class ListeCarteUser extends StatelessWidget {
     );
   }
 
-  void _deleteItem(BuildContext context, DocumentSnapshot contactDoc, DocumentSnapshot carteScanneeDoc) {
-  // Afficher une boîte de dialogue de confirmation
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Confirmer la suppression'),
-        content: const Text('Êtes-vous sûr de vouloir supprimer ces éléments ?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Fermer la boîte de dialogue
-            },
-            child: const Text('Annuler'),
-          ),
-          TextButton(
-            onPressed: () async {
-              // Supprimer le contact
-              if (contactDoc != null) {
-                await FirebaseFirestore.instance
-                    .collection('contacts')
-                    .doc(contactDoc.id)
-                    .delete()
-                    .then((_) {
-                      print('Contact supprimé');
-                    }).catchError((error) {
-                      print('Erreur lors de la suppression du contact : $error');
-                    });
-              }
+  void _showEditPopup(BuildContext context, DocumentSnapshot doc) {
+    final TextEditingController nomController =
+        TextEditingController(text: doc['profession']);
+        final TextEditingController prenomController =
+        TextEditingController(text: doc['profession']);
+    final TextEditingController professionController =
+        TextEditingController(text: doc['profession']);
+    final TextEditingController personnelController =
+        TextEditingController(text: doc['personnel']);
+    final TextEditingController emailController =
+        TextEditingController(text: doc['email']);
+    final TextEditingController entrepriseController =
+        TextEditingController(text: doc['email']);
+    final TextEditingController adresseController =
+        TextEditingController(text: doc['email']);
+   
 
-              // Supprimer la carte scannée
-              if (carteScanneeDoc != null) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Modifier la carte scannée'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: nomController,
+                  decoration: const InputDecoration(labelText: 'Profession'),
+                ),
+                TextField(
+                  controller: prenomController,
+                  decoration: const InputDecoration(labelText: 'Profession'),
+                ),
+                TextField(
+                  controller: professionController,
+                  decoration: const InputDecoration(labelText: 'Profession'),
+                ),
+                TextField(
+                  controller: personnelController,
+                  decoration: const InputDecoration(labelText: 'Personnel'),
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                TextField(
+                  controller: entrepriseController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                TextField(
+                  controller: adresseController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () async {
                 await FirebaseFirestore.instance
                     .collection('CarteScannee')
-                    .doc(carteScanneeDoc.id)
-                    .delete()
-                    .then((_) {
-                      print('Carte scannée supprimée');
-                    }).catchError((error) {
-                      print('Erreur lors de la suppression de la carte scannée : $error');
-                    });
-              }
+                    .doc(doc.id)
+                    .update({
+                  'profession': professionController.text,
+                  'personnel': personnelController.text,
+                  'email': emailController.text,
+                });
+                Navigator.pop(context);
+              },
+              child: const Text('Enregistrer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-              Navigator.of(context).pop(); // Fermer la boîte de dialogue après la suppression
-            },
-            child: const Text('Supprimer'),
-          ),
-        ],
-      );
-    },
-  );
-}
+  void _deleteItem(BuildContext context, DocumentSnapshot contactDoc, DocumentSnapshot carteScanneeDoc) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmer la suppression'),
+          content: const Text('Êtes-vous sûr de vouloir supprimer ces éléments ?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (contactDoc != null) {
+                  await FirebaseFirestore.instance
+                      .collection('contacts')
+                      .doc(contactDoc.id)
+                      .delete();
+                }
 
+                if (carteScanneeDoc != null) {
+                  await FirebaseFirestore.instance
+                      .collection('CarteScannee')
+                      .doc(carteScanneeDoc.id)
+                      .delete();
+                }
+
+                Navigator.of(context).pop();
+              },
+              child: const Text('Supprimer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _exportAsPDF(DocumentSnapshot doc) async {
     final pdf = pw.Document();
@@ -353,28 +329,23 @@ class ListeCarteUser extends StatelessWidget {
       ),
     );
 
-    // Sauvegarder le fichier PDF
     final bytes = await pdf.save();
 
-    // Créer un fichier temporaire pour stocker le PDF
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/contact_export.pdf';
     final file = File(filePath);
     await file.writeAsBytes(bytes);
 
-    // Partager le fichier PDF avec XFile
     final xFile = XFile(filePath);
     Share.shareXFiles([xFile], text: 'Contact en PDF');
   }
 
   void _exportAsCSV(DocumentSnapshot doc) {
-    // Exporter les données sous forme de CSV
-    final data = doc.data() as Map<String, dynamic>?; // Cast au bon type
+    final data = doc.data() as Map<String, dynamic>?;
     if (data != null) {
       final csvData =
           "Profession,Email\n${data['profession']},${data['email']}";
 
-      // Partager ou sauvegarder le fichier CSV
       Share.share(csvData, subject: 'Contact exporté en CSV');
     } else {
       print('Aucune donnée trouvée pour ce document.');

@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_card/Service/Scan_service.dart';
+import 'package:http/http.dart' as http;
 import 'package:scan_card/User/navigation_bar.dart'; // Assure-toi que ton service ScanService est importé
 
 class CarteScannee extends StatefulWidget {
@@ -119,6 +121,35 @@ class _CarteScanneeState extends State<CarteScannee> {
     }
   }
 
+   // Fonction de géocodage
+  Future<void> geocodeAddress(String address) async {
+    // Vérifier si l'adresse correspond au regex
+    if (!adresseRegex.hasMatch(address)) {
+      print('Adresse invalide : $address');
+      return; // Sortir de la fonction si l'adresse n'est pas valide
+    }
+
+    final apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?address=${Uri.encodeComponent(address)}&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == 'OK') {
+        final location = data['results'][0]['geometry']['location'];
+        final lat = location['lat'];
+        final lng = location['lng'];
+        print('Latitude: $lat, Longitude: $lng');
+      } else {
+        print('Erreur de géocodage: ${data['status']}');
+      }
+    } else {
+      print('Erreur HTTP: ${response.statusCode}');
+    }
+  }
+
+
   void _resetFields() {
     _nomController.clear();
     _prenomController.clear();
@@ -194,9 +225,12 @@ class _CarteScanneeState extends State<CarteScannee> {
     RegExp professionRegex =
         RegExp(r'\b([A-Z][a-z]+ [A-Z][a-z]+)\b', caseSensitive: false);
 // Les mots qui commencent par une majuscule et Les espaces, les tirets, les virgules, et d'autres caractères acceptables pour une adresse.
-    RegExp adresseRegex = RegExp(
-        r'([A-Z][a-zA-Z0-9\s,.-]*)(?:\s+[A-Z][a-zA-Z0-9\s,.-]*)*',
-        caseSensitive: false);
+    // Votre regex pour valider les adresses
+  final RegExp adresseRegex = RegExp(
+    r'(\d+\s[A-zÀ-ÿ0-9\s.,-]+(?:\s[A-zÀ-ÿ][a-zÀ-ÿ]*)?(?:\s*-\s*[A-zÀ-ÿ][a-zÀ-ÿ]*)?)(,\s*[A-zÀ-ÿ\s]+)?(,\s*\d{5})?',
+    caseSensitive: false,
+  );
+
 
 // cette expression régulière correspondra uniquement aux numéros de téléphone commençant par "223" ou "+223", suivis de 8 chiffres.
     RegExp personnelRegex = RegExp(
